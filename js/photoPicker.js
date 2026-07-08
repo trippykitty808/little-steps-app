@@ -26,7 +26,6 @@ export function renderPhotoPicker({ shape = 'rounded', previewUrl, uploading, pl
   const input = el('input', {
     type: 'file',
     accept: 'image/*',
-    capture: 'environment',
     onChange: (e) => {
       const file = e.target.files && e.target.files[0];
       if (file && onFile) onFile(file);
