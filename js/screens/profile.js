@@ -61,11 +61,9 @@ export function renderProfile(vals, actions) {
         el('div', { style: { font: "700 16px 'Nunito', sans-serif", color: 'var(--waldorf-fg)' } }, '→'),
       ]),
     ]),
-    el('div', { class: 'section-label', style: { marginTop: '24px' } }, 'License & credits'),
-    el('div', { style: { marginTop: '8px', font: "400 12px/1.6 'Nunito', sans-serif", color: 'var(--text-muted-2)' } }, [
-      `© ${new Date().getFullYear()} Tin Roof Tek, LLC. This app is licensed under `,
-      el('a', { href: 'https://creativecommons.org/licenses/by-nc-sa/4.0/', target: '_blank', rel: 'noopener' }, 'CC BY-NC-SA 4.0'),
-      ' (Attribution — NonCommercial — ShareAlike). All rights not granted by that license are reserved. For commercial use, please contact Tin Roof Tek, LLC. See the included LICENSE.md for full terms.',
+    el('div', { style: { marginTop: '28px', textAlign: 'center', font: "400 10.5px 'Nunito', sans-serif", color: 'var(--text-muted-5)' } }, [
+      `© ${new Date().getFullYear()} Tin Roof Tek, LLC · `,
+      el('a', { href: 'https://creativecommons.org/licenses/by-nc-sa/4.0/', target: '_blank', rel: 'noopener', style: { color: 'inherit' } }, 'CC BY-NC-SA 4.0'),
     ]),
     el('div', { style: { height: '16px' } }),
   ]);
