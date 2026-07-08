@@ -1,4 +1,8 @@
-const CACHE_VERSION = 'little-steps-v1';
+// Bump CACHE_VERSION on every deploy that changes any file below — this is
+// what tells a phone that already has the app installed there's something
+// new to fetch. Editing an app file alone does NOT trigger an update; this
+// script's own bytes have to change too.
+const CACHE_VERSION = 'little-steps-v2';
 const SHELL_FILES = [
   './',
   './index.html',
@@ -7,6 +11,7 @@ const SHELL_FILES = [
   './js/app.js',
   './js/state.js',
   './js/utils.js',
+  './js/photoPicker.js',
   './js/firebase-config.js',
   './js/firebase.js',
   './js/data/activities.js',
@@ -24,9 +29,7 @@ const SHELL_FILES = [
   './js/screens/milestoneDetail.js',
   './js/screens/guide.js',
   './js/screens/profile.js',
-  './js/screens/scrapbookMemories.js',
-  './js/screens/scrapbookNotes.js',
-  './js/screens/scrapbookMilestones.js',
+  './js/screens/scrapbook.js',
   './js/screens/memoryNew.js',
   './js/screens/memoryDetail.js',
   './js/screens/printPreview.js',
@@ -35,6 +38,8 @@ const SHELL_FILES = [
   './js/authScreen.js',
   './icons/icon-192.png',
   './icons/icon-512.png',
+  './icons/icon-maskable-192.png',
+  './icons/icon-maskable-512.png',
   './icons/apple-touch-icon.png',
   './icons/favicon-32.png',
   './icons/favicon-16.png',
@@ -61,18 +66,19 @@ self.addEventListener('fetch', (event) => {
   // fonts, Firestore/Storage calls) goes straight to the network untouched.
   if (event.request.method !== 'GET' || url.origin !== self.location.origin) return;
 
+  // Network-first: always try to get the latest file when online, so a
+  // deploy is visible on next reload instead of silently staying stale.
+  // Falls back to the cached copy only when the network is unavailable
+  // (this is what keeps the app usable offline).
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      const network = fetch(event.request)
-        .then((response) => {
-          if (response && response.status === 200) {
-            const copy = response.clone();
-            caches.open(CACHE_VERSION).then((cache) => cache.put(event.request, copy));
-          }
-          return response;
-        })
-        .catch(() => cached);
-      return cached || network;
-    })
+    fetch(event.request)
+      .then((response) => {
+        if (response && response.status === 200) {
+          const copy = response.clone();
+          caches.open(CACHE_VERSION).then((cache) => cache.put(event.request, copy));
+        }
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
