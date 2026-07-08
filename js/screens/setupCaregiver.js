@@ -29,6 +29,12 @@ export function renderSetupCaregiver(vals, actions) {
             class: `pill${draft.role === label ? ' selected' : ''}`,
             onClick: () => actions.setCaregiverDraftRole(label),
           }, label))),
+        draft.role === 'Other' ? el('input', {
+          class: 'text-input', style: { marginTop: '10px' },
+          placeholder: 'e.g. Aunt, family friend, godparent',
+          value: draft.customRole || '',
+          onInput: (e) => actions.onCaregiverCustomRoleChange(e),
+        }) : null,
       ]),
     ]),
 
