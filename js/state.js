@@ -13,6 +13,15 @@ const FOCUS_LIST = ['Practical Life', 'Sensorial', 'Language', 'Movement', 'Natu
 const ROLE_OPTIONS = ['Grandparent', 'Parent', 'Nanny/Sitter', 'Other'];
 const SWATCH_PALETTE = ['#C9DDB6', '#D8C7E6', '#F4D9C6', '#B9C7DE'];
 
+// A saved caregiverRole that isn't one of the standard pills is a previously
+// entered custom "Other" value — re-select the Other pill and restore the text.
+function deriveRoleDraft(currentRole) {
+  if (!currentRole || ROLE_OPTIONS.includes(currentRole)) {
+    return { role: currentRole || '', customRole: '' };
+  }
+  return { role: 'Other', customRole: currentRole };
+}
+
 let listeners = [];
 export function onChange(cb) { listeners.push(cb); }
 function notify() { listeners.forEach((cb) => cb()); }
@@ -160,21 +169,24 @@ export const actions = {
   },
   backFromSetupChild() { setUI({ screen: data.children.length === 0 ? 'welcome' : 'home', draftChild: null }); },
   goSetupCaregiver() {
+    const { role, customRole } = deriveRoleDraft(data.caregiverRole);
     setUI({
       caregiverFlowFrom: 'onboarding', screen: 'setup-caregiver',
-      caregiverDraft: { name: data.caregiverName, role: data.caregiverRole, previewUrl: data.caregiverPhotoURL, url: data.caregiverPhotoURL, uploading: false, photoFile: null },
+      caregiverDraft: { name: data.caregiverName, role, customRole, previewUrl: data.caregiverPhotoURL, url: data.caregiverPhotoURL, uploading: false, photoFile: null },
     });
   },
   goEditCaregiver() {
+    const { role, customRole } = deriveRoleDraft(data.caregiverRole);
     setUI({
       caregiverFlowFrom: 'profile', screen: 'setup-caregiver',
-      caregiverDraft: { name: data.caregiverName, role: data.caregiverRole, previewUrl: data.caregiverPhotoURL, url: data.caregiverPhotoURL, uploading: false, photoFile: null },
+      caregiverDraft: { name: data.caregiverName, role, customRole, previewUrl: data.caregiverPhotoURL, url: data.caregiverPhotoURL, uploading: false, photoFile: null },
     });
   },
   backFromSetupCaregiver() { setUI({ screen: ui.caregiverFlowFrom === 'profile' ? 'profile' : 'setup-child' }); },
   async continueFromSetupCaregiver() {
     const d = ui.caregiverDraft;
-    setData({ caregiverName: (d.name || '').trim() || 'Caregiver', caregiverRole: d.role || 'Grandparent', caregiverPhotoURL: d.url || null });
+    const finalRole = d.role === 'Other' ? ((d.customRole || '').trim() || 'Other') : (d.role || 'Grandparent');
+    setData({ caregiverName: (d.name || '').trim() || 'Caregiver', caregiverRole: finalRole, caregiverPhotoURL: d.url || null });
     fb.saveUserProfile(data.uid, { caregiverName: data.caregiverName, caregiverRole: data.caregiverRole, caregiverPhotoURL: data.caregiverPhotoURL }).catch((e) => console.error(e));
     if (ui.caregiverFlowFrom === 'profile') { setUI({ screen: 'profile', caregiverDraft: null }); return; }
     setUI({ screen: 'setup-focus', caregiverDraft: null });
@@ -183,7 +195,10 @@ export const actions = {
   // typing never steals focus from the input. The value is only read (and
   // persisted) when the user taps an explicit Continue/Save/Send button.
   onCaregiverDraftNameChange(e) { ui.caregiverDraft.name = e.target.value; },
-  setCaregiverDraftRole(role) { setUI({ caregiverDraft: { ...ui.caregiverDraft, role } }); },
+  setCaregiverDraftRole(role) {
+    setUI({ caregiverDraft: { ...ui.caregiverDraft, role, customRole: role === 'Other' ? ui.caregiverDraft.customRole : '' } });
+  },
+  onCaregiverCustomRoleChange(e) { ui.caregiverDraft.customRole = e.target.value; },
   onCaregiverDraftPhotoFile(file) { handlePhotoDraftUpload('caregiverDraft', ['caregiver-profile.jpg'], file); },
 
   onDraftChildNameChange(e) { ui.draftChild.name = e.target.value; },
