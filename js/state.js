@@ -4,7 +4,7 @@
 // memories/notes) lives in Firestore instead of in-memory, while transient
 // UI state (current screen, filters, drafts, selection mode) stays local.
 import * as fb from './firebase.js';
-import { ACTIVITIES, TRADITION_RESOURCES, categoryIconSvg, fmtAgeRange } from './data/activities.js';
+import { ACTIVITIES, categoryIconSvg, fmtAgeRange } from './data/activities.js';
 import { MILESTONES, DOMAIN_ORDER, DOMAIN_COLORS, statusStyle } from './data/milestones.js';
 import { GUIDE_RESOURCES, GUIDE_MEDIA } from './data/guideResources.js';
 import { monthsToLabel, stageForMonths, shareText } from './utils.js';
@@ -417,7 +417,7 @@ export function getViewState() {
       isGoodFit: ageOk && focusMatch(a.category),
       steps: a.steps.map((text, i) => ({ n: i + 1, text })),
       iconHtml: categoryIconSvg(a.category, 'rgba(255,255,255,.9)'),
-      resources: TRADITION_RESOURCES[a.tradition] || [],
+      resources: a.resources || [],
     };
   });
   const selectedActivity = activities.find((a) => a.id === s.selectedActivityId) || activities[0];
@@ -472,17 +472,17 @@ export function getViewState() {
   const draft = s.draftChild || { name: '', ageMonths: 24, focusAreas: [] };
   const draftFocusOptions = FOCUS_LIST.map((label) => ({ label, selected: draft.focusAreas.includes(label) }));
 
-  const activityCategoryByName = {};
-  ACTIVITIES.forEach((a) => { activityCategoryByName[a.name] = { category: a.category, tradition: a.tradition }; });
+  const activityInfoByName = {};
+  ACTIVITIES.forEach((a) => { activityInfoByName[a.name] = { category: a.category, tradition: a.tradition, resources: a.resources || [] }; });
 
   const memories = data.memories.map((m) => {
-    const catInfo = m.tag ? activityCategoryByName[m.tag] : null;
+    const catInfo = m.tag ? activityInfoByName[m.tag] : null;
     return {
       ...m,
       hasIcon: !!catInfo,
       iconHtml: catInfo ? categoryIconSvg(catInfo.category, '#fff') : '',
       iconHtmlDark: catInfo ? categoryIconSvg(catInfo.category, '#7A5FA0') : '',
-      resources: catInfo ? (TRADITION_RESOURCES[catInfo.tradition] || []) : [],
+      resources: catInfo ? catInfo.resources : [],
       isSelected: s.selectedMemoryIds.includes(m.id),
     };
   });
