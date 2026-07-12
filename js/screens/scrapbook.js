@@ -60,6 +60,8 @@ function renderNotesTab(vals, actions) {
       el('textarea', { class: 'text-area', style: { marginTop: '14px', background: 'var(--input-bg)' }, placeholder: 'Anything else worth sharing...', onInput: (e) => actions.onNoteMessageChange(e) }, vals.noteMessage),
 
       el('div', { class: 'btn-primary', style: { marginTop: '14px', padding: '14px', borderRadius: '14px', font: "600 15px 'Quicksand', sans-serif" }, onClick: () => actions.sendNote() }, 'Send to family'),
+      el('div', { style: { marginTop: '8px', textAlign: 'center', font: "400 11.5px 'Nunito', sans-serif", color: 'var(--text-muted-5)' } }, 'Opens your phone’s share menu — pick Messages, email, or any app.'),
+      vals.shareToast ? el('div', { class: 'toast', style: { marginTop: '6px' } }, vals.shareToast) : null,
     ]),
 
     el('div', { style: { display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: '22px' } }, [
