@@ -60,6 +60,13 @@ export function renderProfile(vals, actions) {
         ]),
         el('div', { style: { font: "700 16px 'Nunito', sans-serif", color: 'var(--waldorf-fg)' } }, '→'),
       ]),
+      el('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--sage-tint-bg)', borderRadius: '16px', padding: '14px 16px', cursor: 'pointer' }, onClick: () => actions.goNutrition() }, [
+        el('div', {}, [
+          el('div', { style: { font: "600 14px 'Quicksand', sans-serif", color: 'var(--text-primary)' } }, 'Nutrition guide'),
+          el('div', { style: { font: "400 12px 'Nunito', sans-serif", color: 'var(--sage-tint-fg)', marginTop: '2px' } }, 'Brain & body needs by stage, plant-based & science-backed'),
+        ]),
+        el('div', { style: { font: "700 16px 'Nunito', sans-serif", color: 'var(--sage-tint-fg)' } }, '→'),
+      ]),
     ]),
     el('div', { style: { marginTop: '28px', textAlign: 'center', font: "400 10.5px 'Nunito', sans-serif", color: 'var(--text-muted-5)' } }, [
       `© ${new Date().getFullYear()} Tin Roof Tek, LLC · `,
