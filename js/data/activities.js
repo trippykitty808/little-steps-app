@@ -14,6 +14,8 @@ export const CATEGORY_ICON_PATHS = {
   'Rhythm & Ritual': '<circle cx="12" cy="12" r="4" stroke="{S}" stroke-width="1.7"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2 2M16.4 16.4l2 2M5.6 18.4l2-2M16.4 7.6l2-2" stroke="{S}" stroke-width="1.7" stroke-linecap="round"/>',
   'Handwork': '<circle cx="12" cy="12" r="7" stroke="{S}" stroke-width="1.7"/><circle cx="9.5" cy="9.5" r="1" fill="{S}" stroke="none"/><circle cx="14.5" cy="9.5" r="1" fill="{S}" stroke="none"/><circle cx="9.5" cy="14.5" r="1" fill="{S}" stroke="none"/><circle cx="14.5" cy="14.5" r="1" fill="{S}" stroke="none"/>',
   'Creative Arts': '<g transform="rotate(45 12 12)"><rect x="9" y="9" width="6" height="12" rx="1.6" stroke="{S}" stroke-width="1.7"/><path d="M9 9L12 3.5L15 9" stroke="{S}" stroke-width="1.7" stroke-linejoin="round"/></g>',
+  'Mathematics': '<path d="M5 8.5h14M5 15.5h14" stroke="{S}" stroke-width="1.7" stroke-linecap="round"/><circle cx="8" cy="8.5" r="1.5" fill="{S}" stroke="none"/><circle cx="13" cy="8.5" r="1.5" fill="{S}" stroke="none"/><circle cx="10.5" cy="15.5" r="1.5" fill="{S}" stroke="none"/><circle cx="15.5" cy="15.5" r="1.5" fill="{S}" stroke="none"/>',
+  'Cultural Studies': '<circle cx="12" cy="12" r="8.2" stroke="{S}" stroke-width="1.7"/><path d="M3.8 12h16.4M12 3.8c3 2 3 14.4 0 16.4M12 3.8c-3 2-3 14.4 0 16.4" stroke="{S}" stroke-width="1.7" fill="none" stroke-linecap="round"/>',
 };
 
 export function categoryIconSvg(category, color) {
@@ -466,6 +468,172 @@ export const ACTIVITIES = [
     ],
     resources: [
       { name: 'Simple Clay Skills & Techniques to Teach Children', desc: 'Foundational moves to show before a child sculpts specific forms.', url: 'https://www.howwemontessori.com/how-we-montessori/2022/01/clay-skills-techniques-to-teach-children.html' },
+    ] },
+
+  // ---------- Mathematics ----------
+  { id: 'a37', name: 'Counting Basket', tradition: 'Montessori', category: 'Mathematics', duration: '10 min', ageMin: 24, ageMax: 42, color: '#F0C9C9',
+    materials: ['A small basket', '5–10 identical small objects (start with all the same kind — stones, shells, or wooden discs — so only the number changes)', 'A muffin tin or ice cube tray (optional, for one object per space)'],
+    steps: [
+      'Start with identical objects, so the only thing changing is how many there are — not their color or shape.',
+      'Set the basket of objects on a tray or mat within your child’s reach.',
+      'Take one object out, place it down, and say "one" as you touch it.',
+      'Take another, set it beside the first, and say "two" — matching each number to one object as you touch it.',
+      'Invite your child to take out and count the objects the same way, touching each one as they say its number.',
+      'For a child who’s ready, use a muffin tin and have them place exactly one object in each cup, so one number always matches one space.',
+    ],
+    resources: [
+      { name: 'Learning to Count: One-to-One Correspondence', desc: 'Why touching-while-counting matters, and how to introduce it.', url: 'https://www.montessoriinreallife.com/home/2020/6/9/learning-to-count' },
+      { name: 'Simple, Montessori-Inspired Counting for Toddlers', desc: 'Everyday counting-basket ideas by age.', url: 'https://livingmontessorinow.com/simple-montessori-inspired-counting-for-toddlers/' },
+    ] },
+  { id: 'a38', name: 'Sorting Tray', tradition: 'Montessori', category: 'Mathematics', duration: '10 min', ageMin: 24, ageMax: 42, color: '#F0C9C9',
+    materials: ['A divided tray or 2–3 small bowls', 'A handful of objects that clearly fall into 2–3 groups (e.g. buttons of two colors, or pom-poms and pebbles)', 'Tongs or a spoon (optional, for scooping)'],
+    steps: [
+      'Choose objects that sort into just two clear groups to begin — for example, red buttons and blue buttons.',
+      'Set the mixed objects in the middle with an empty bowl on each side.',
+      'Demonstrate: pick up one object, name what makes it different ("this one is red"), and place it in one bowl.',
+      'Do one more of each kind, then invite your child to sort the rest.',
+      'Let them sort in their own way, even if it differs from yours — noticing the difference is the real skill.',
+      'Once two groups feel easy, add a third group, or switch to sorting by size or shape.',
+    ],
+    resources: [
+      { name: 'Sorting & Classifying Activities for 3-Year-Olds', desc: 'A range of simple sorting setups and what they build toward.', url: 'https://www.howwemontessori.com/how-we-montessori/2021/09/sorting-classifying-acitivities-three-to-four-year-olds.html' },
+    ] },
+  { id: 'a39', name: 'Sandpaper Numbers', tradition: 'Montessori', category: 'Mathematics', duration: '10–15 min', ageMin: 36, ageMax: 60, color: '#F0C9C9',
+    materials: ['Sandpaper number cards 0–9 (numerals cut from sandpaper and glued to card, or purchased)', 'A few small objects to count alongside each numeral'],
+    steps: [
+      'To make your own (one-time prep): print large numerals 0–9, trace each onto sandpaper, cut it out, and glue it to a firm card.',
+      'Choose one or two numerals to start with, ideally ones your child already notices — like the number of their age.',
+      'Trace the numeral slowly with two fingers, in the direction you’d write it, saying its name out loud.',
+      'Invite your child to trace the same numeral while saying the number back to you.',
+      'Set out that many objects beside the card, so the symbol connects to a real quantity.',
+      'Introduce only one new numeral at a time so it stays relaxed.',
+    ],
+    resources: [
+      { name: 'How Montessori Sandpaper Numbers Work', desc: 'The tactile approach and why it pairs symbol with sound.', url: 'https://www.montessori-theory.com/montessori-sandpaper-numbers/' },
+      { name: 'Three-Period Lesson with Sandpaper Numbers', desc: 'The naming → identify → recall lesson, step by step.', url: 'https://www.wonderfulmontessori.com/sandpaper-numbers' },
+    ] },
+  { id: 'a40', name: 'Number Rods', tradition: 'Montessori', category: 'Mathematics', duration: '15 min', ageMin: 36, ageMax: 60, color: '#F0C9C9',
+    materials: ['A set of 10 number rods (each one unit longer than the last, marked in alternating color bands) — or make your own from 10 dowels or craft sticks cut to increasing lengths and painted'],
+    steps: [
+      'If making your own (one-time prep): cut 10 rods so each is one unit longer than the last, and paint them in alternating red/blue bands so each unit segment shows.',
+      'Lay the rods in a stair, from the shortest (1) on the left to the longest (10) on the right.',
+      'Point to the shortest rod and count its single segment: "one."',
+      'Move to the next rod, touching and counting each segment: "one, two — this rod is two."',
+      'Continue up the stair, naming each rod by its total length.',
+      'Mix the rods up and invite your child to rebuild the stair and count each rod themselves.',
+      'Once confident, pair each rod with its matching sandpaper or written numeral.',
+    ],
+    resources: [
+      { name: 'Montessori Number Rods: Explanation and Presentation', desc: 'Full presentation and what the rods teach about quantity.', url: 'https://reachformontessori.com/number-rods/' },
+    ] },
+  { id: 'a41', name: 'Spindle Box', tradition: 'Montessori', category: 'Mathematics', duration: '15 min', ageMin: 42, ageMax: 60, color: '#F0C9C9',
+    materials: ['A box or muffin tin with compartments labeled 0–9', '45 spindles to count (dowels, popsicle sticks, unsharpened pencils, or straws all work)'],
+    steps: [
+      'Set up (one-time prep): label 10 compartments 0 through 9 in order, and gather 45 countable sticks in a separate container.',
+      'Point to the "1" compartment, count one spindle into it, and hold it as a single unit.',
+      'Continue placing the matching number of spindles into each compartment, counting aloud each time.',
+      'When you reach "0", pause and explain gently: zero means none — nothing goes in this space.',
+      'At the end, look in the container together — it should be empty, another way to feel what zero means.',
+      'Invite your child to fill the compartments and count out each group themselves.',
+    ],
+    resources: [
+      { name: 'The Spindle Boxes in Montessori: Purpose & Presentation', desc: 'How the box introduces counting and the concept of zero.', url: 'https://reachformontessori.com/the-spindle-boxes-in-montessori/' },
+    ] },
+  { id: 'a42', name: 'Cards and Counters', tradition: 'Montessori', category: 'Mathematics', duration: '15 min', ageMin: 42, ageMax: 60, color: '#F0C9C9',
+    materials: ['Numeral cards 1–10', '55 identical small counters (buttons, dried beans, coins, glass gems, or pebbles)'],
+    steps: [
+      'Lay the numeral cards 1 through 10 in order along the top of a mat.',
+      'Under the "1" card, place a single counter.',
+      'Under "2", place two counters side by side; continue, placing counters in pairs beneath each card.',
+      'For odd numbers, the last counter has no partner — place it centered below the bottom pair.',
+      'Trace with your finger which numbers have all-paired counters and which have a lonely one.',
+      'Introduce the words gently: numbers where every counter has a partner are "even," and the ones with a leftover are "odd."',
+    ],
+    resources: [
+      { name: 'Montessori Cards and Counters: Explanation and Presentation', desc: 'Laying out the counters and introducing odd and even.', url: 'https://reachformontessori.com/cards-and-counters/' },
+    ] },
+
+  // ---------- Cultural Studies ----------
+  { id: 'a43', name: 'Sandpaper Globe — Land & Water', tradition: 'Montessori', category: 'Cultural Studies', duration: '10 min', ageMin: 30, ageMax: 54, color: '#A7C4BC',
+    materials: ['An old globe (thrift stores are ideal)', 'Bright blue craft paint', 'Craft glue and a fine brush', 'Play sand', 'Clear sealant spray (adult use only)'],
+    steps: [
+      'Make the globe (one-time prep): paint all the oceans and water bright blue and let it dry overnight.',
+      'Working in small sections over a few days, brush glue onto the land, sprinkle with sand, pat it down, and let each section dry.',
+      'Once fully dry, seal the whole globe with a clear spray in a well-ventilated area.',
+      'Introduce it simply: "This is the Earth, the planet we live on — this is what it looks like from far away."',
+      'Run your hands lightly over the surface, then invite your child to feel it too.',
+      'Name what they feel: the smooth parts are water, the rough sandy parts are land.',
+    ],
+    resources: [
+      { name: 'The Montessori Sandpaper Globe: Purpose and Presentation', desc: 'What the globe teaches and how to present it.', url: 'https://reachformontessori.com/sandpaper-globe/' },
+      { name: 'DIY Sandpaper Globe', desc: 'A photo walkthrough of making one from an old globe.', url: 'https://mamaguru.com/diy-sandpaper-globe/' },
+    ] },
+  { id: 'a44', name: 'Continent Puzzle Map', tradition: 'Montessori', category: 'Cultural Studies', duration: '15 min', ageMin: 36, ageMax: 60, color: '#A7C4BC',
+    materials: ['A continent puzzle map, or a printed world map with color-coded continents', 'Pictures of animals, landmarks, or family from different continents (optional)'],
+    steps: [
+      'Introduce the map as a flat picture of the round Earth, "opened up so we can see all of it at once."',
+      'Name just one continent to start — the one you live on.',
+      'Trace its outline with your finger and say its name.',
+      'Let your child trace it too, and if it’s a puzzle, remove and replace that piece.',
+      'Over several days, add one new continent at a time rather than all at once.',
+      'Extend it by matching a picture of an animal or a family photo to the continent it comes from.',
+    ],
+    resources: [
+      { name: 'DIY Montessori Globes & Continent Maps', desc: 'Making continent geography materials at home, in sequence.', url: 'https://livingmontessorinow.com/montessori-monday-diy-montessori-globes/' },
+    ] },
+  { id: 'a45', name: 'Land and Water Forms', tradition: 'Montessori', category: 'Cultural Studies', duration: '15 min', ageMin: 42, ageMax: 60, color: '#A7C4BC',
+    materials: ['Two shallow trays or paper plates', 'Air-dry clay or salt dough', 'A small pitcher of blue-tinted water', 'A sponge'],
+    steps: [
+      'Make the forms (one-time prep): on one tray, mold clay into a small island with a ring of space around it; on the other, mold land with a hollow lake in the middle. Let them dry.',
+      'Set both trays out with the pitcher of blue water.',
+      'Slowly pour water around the island so it’s surrounded on all sides, trace its edge, and name it: "an island — land with water all around it."',
+      'Pour water into the lake, trace its edge, and name it: "a lake — water with land all around it."',
+      'Let your child pour the water and trace each form themselves.',
+      'Sponge the water back up together as part of finishing the work.',
+    ],
+    resources: [
+      { name: 'Montessori Land and Water Forms (Step-by-Step Guide)', desc: 'The first geography lesson, with definitions and presentation.', url: 'https://themontessorijournal.com/montessori-land-and-water-forms/' },
+      { name: 'Making an Affordable Land and Water Forms Activity', desc: 'A ~$10 salt-dough-and-paper-plate DIY version.', url: 'https://readaboutreading.wordpress.com/2015/07/19/making-an-affordable-land-and-water-forms-activity/' },
+    ] },
+  { id: 'a46', name: 'Living or Non-Living Sort', tradition: 'Montessori', category: 'Cultural Studies', duration: '10–15 min', ageMin: 36, ageMax: 54, color: '#A7C4BC',
+    materials: ['Two labeled mats or hoops (one "living," one "non-living")', '8–12 picture cards or small real objects (a leaf, a shell, a toy car, a stone, a photo of an animal)'],
+    steps: [
+      'Talk first about what living things do: they grow, need food and water, and change over time.',
+      'Set out two areas, one for living things and one for non-living.',
+      'Pick up one item and think aloud — "does this grow? does it need food?" — then place it on the matching side.',
+      'Do a second example for each side, then invite your child to sort the rest.',
+      'Ask them to explain their choices; the reasoning matters more than getting every one "right."',
+      'For a plant, talk about how it’s living even though it doesn’t move around like an animal.',
+    ],
+    resources: [
+      { name: 'Montessori Living and Non-Living Resources and Activities', desc: 'Object and card ideas plus how to introduce the concept.', url: 'https://livingmontessorinow.com/montessori-living-and-non-living-resources-and-activities/' },
+    ] },
+  { id: 'a47', name: 'Parts of a Plant', tradition: 'Montessori', category: 'Cultural Studies', duration: '10–15 min', ageMin: 36, ageMax: 60, color: '#A7C4BC',
+    materials: ['A real potted plant, or a freshly pulled weed with the roots intact', 'Parts-of-a-plant picture cards (optional)'],
+    steps: [
+      'Gently lay out a whole plant with its roots, stem, leaves, and flower visible.',
+      'Point to and name one part at a time, starting with the roots: "these are the roots — they drink water from the soil."',
+      'Move up the plant naming the stem, the leaves, and the flower, keeping it to just a few parts.',
+      'Ask your child to point to a part when you name it ("show me the leaves").',
+      'Then point to a part and ask them to name it back.',
+      'Extend it by matching picture cards to the real parts, or pressing a leaf to keep.',
+    ],
+    resources: [
+      { name: 'Montessori-Inspired Parts of a Plant', desc: 'Naming the parts with a real plant and cards.', url: 'https://www.pinayhomeschooler.com/2017/06/montessori-inspired-parts-of-plant.html' },
+    ] },
+  { id: 'a48', name: 'Sink or Float', tradition: 'Montessori', category: 'Cultural Studies', duration: '10–15 min', ageMin: 30, ageMax: 54, color: '#A7C4BC',
+    materials: ['A clear tub or bowl of water', 'A towel for drips', '6–10 safe household objects likely to sink or float (cork, spoon, coin, sponge, plastic lid, stone, apple, wooden block)'],
+    steps: [
+      'Fill a clear tub with water and set out your objects and a towel.',
+      'Hold up the first object and ask your child to guess: will it sink or float?',
+      'Let them drop it in and watch what happens.',
+      'Sort tested objects into two groups beside the tub — a "sink" pile and a "float" pile.',
+      'Keep guessing and testing, noticing out loud what the floaters and the sinkers have in common.',
+      'Talk simply about why: heavy-for-their-size things sink, light-for-their-size things float.',
+    ],
+    resources: [
+      { name: 'Sink or Float: Toddler Science Experiment', desc: 'A simple, low-prep version for the youngest scientists.', url: 'https://busytoddler.com/sink-or-float-toddler-science/' },
+      { name: 'Easy Sink or Float Science Experiment for Preschool', desc: 'Adds prediction and sorting for older preschoolers.', url: 'https://lifeovercs.com/sink-float-science-activity-preschool/' },
     ] },
 ];
 
