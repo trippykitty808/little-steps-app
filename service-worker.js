@@ -2,7 +2,7 @@
 // what tells a phone that already has the app installed there's something
 // new to fetch. Editing an app file alone does NOT trigger an update; this
 // script's own bytes have to change too.
-const CACHE_VERSION = 'little-steps-v10';
+const CACHE_VERSION = 'little-steps-v11';
 const SHELL_FILES = [
   './',
   './index.html',
@@ -18,6 +18,7 @@ const SHELL_FILES = [
   './js/data/activities.js',
   './js/data/milestones.js',
   './js/data/guideResources.js',
+  './js/data/nutrition.js',
   './js/screens/welcome.js',
   './js/screens/setupChild.js',
   './js/screens/setupCaregiver.js',
@@ -35,6 +36,7 @@ const SHELL_FILES = [
   './js/screens/memoryDetail.js',
   './js/screens/printPreview.js',
   './js/screens/planner.js',
+  './js/screens/nutrition.js',
   './js/tabBar.js',
   './js/childSwitcher.js',
   './js/authScreen.js',
