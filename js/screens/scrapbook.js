@@ -16,7 +16,14 @@ function renderMemoriesTab(vals, actions) {
         onClick: () => vals.memorySelectMode ? actions.toggleMemorySelect(mem.id) : actions.openMemory(mem.id),
       }, [
         el('div', { style: { position: 'relative' } }, [
-          el('div', { style: { width: '100%', aspectRatio: '1', background: '#F8F4EA' } }, mem.photoURL ? [el('img', { src: mem.photoURL, style: { width: '100%', height: '100%', objectFit: 'cover' } })] : [el('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted-2)', font: "500 12px 'Nunito', sans-serif" } }, '📷')]),
+          el('div', { style: { width: '100%', aspectRatio: '1', background: '#F8F4EA' } },
+            mem.cover
+              ? (mem.cover.type === 'video'
+                  ? [el('video', { src: mem.cover.url, muted: true, playsinline: true, preload: 'metadata', style: { width: '100%', height: '100%', objectFit: 'cover' } })]
+                  : [el('img', { src: mem.cover.url, style: { width: '100%', height: '100%', objectFit: 'cover' } })])
+              : [el('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted-2)', font: "500 12px 'Nunito', sans-serif" } }, '📷')]),
+          mem.cover && mem.cover.type === 'video' ? el('div', { style: { position: 'absolute', inset: '0', display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }, html: '<div style="width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div>' }) : null,
+          mem.mediaCount > 1 ? el('div', { style: { position: 'absolute', top: '8px', right: '8px', background: 'rgba(67,65,75,.75)', color: '#fff', font: "700 10.5px 'Nunito', sans-serif", padding: '3px 8px', borderRadius: '100px', display: 'flex', alignItems: 'center', gap: '4px' }, html: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="12" height="12" rx="2" stroke="#fff" stroke-width="2"/><path d="M8 20h10a2 2 0 002-2V8" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span>${mem.mediaCount}</span>` }) : null,
           mem.hasIcon ? el('div', { style: { position: 'absolute', bottom: '8px', right: '8px', width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(67,65,75,.75)', display: 'flex', alignItems: 'center', justifyContent: 'center' }, html: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none">${mem.iconHtml}</svg>` }) : null,
           vals.memorySelectMode ? el('div', { style: { position: 'absolute', top: '8px', left: '8px', width: '22px', height: '22px', borderRadius: '50%', background: mem.isSelected ? 'var(--sage)' : 'rgba(0,0,0,.25)', border: '1.5px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', font: "700 12px 'Nunito', sans-serif" } }, mem.isSelected ? '✓' : '') : null,
         ]),
