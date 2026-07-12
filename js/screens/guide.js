@@ -3,8 +3,8 @@ import { el } from '../utils.js';
 export function renderGuide(vals, actions) {
   return el('div', { 'data-screen-label': 'Guide', class: 'screen', style: { padding: '26px 24px 10px' } }, [
     el('button', { class: 'back-link', onClick: () => actions.goProfile() }, '← Profile'),
-    el('div', { style: { font: "700 26px 'Quicksand', sans-serif", color: 'var(--text-primary)', marginTop: '14px' } }, 'Montessori & Waldorf Guide'),
-    el('div', { style: { font: "400 14px/1.5 'Nunito', sans-serif", color: 'var(--text-muted-1)', marginTop: '6px' } }, 'Two gentle philosophies, and how we use them here — for caregivers new to either one.'),
+    el('div', { style: { font: "700 26px 'Quicksand', sans-serif", color: 'var(--text-primary)', marginTop: '14px' } }, 'Approaches Guide'),
+    el('div', { style: { font: "400 14px/1.5 'Nunito', sans-serif", color: 'var(--text-muted-1)', marginTop: '6px' } }, 'Three gentle philosophies, and how we use them here — for caregivers new to any of them.'),
 
     el('div', { style: { marginTop: '20px', background: 'var(--montessori)', borderRadius: '18px', padding: '18px' } }, [
       el('div', { style: { font: "700 16px 'Quicksand', sans-serif", color: 'var(--text-primary)' } }, 'Montessori'),
@@ -14,6 +14,11 @@ export function renderGuide(vals, actions) {
     el('div', { style: { marginTop: '14px', background: 'var(--waldorf-2)', borderRadius: '18px', padding: '18px' } }, [
       el('div', { style: { font: "700 16px 'Quicksand', sans-serif", color: 'var(--text-primary)' } }, 'Waldorf'),
       el('div', { style: { font: "400 13.5px/1.6 'Nunito', sans-serif", color: 'var(--text-body)', marginTop: '8px' } }, 'Founded by Rudolf Steiner, Waldorf education leans on rhythm, imagination, nature, and art rather than early academics. Predictable daily and seasonal rituals — a nature table, a circle-time verse, a seasonal walk — give young children a sense of security, while storytelling, handwork, and outdoor play nourish imagination before formal instruction begins.'),
+    ]),
+
+    el('div', { style: { marginTop: '14px', background: '#DDE7CE', borderRadius: '18px', padding: '18px' } }, [
+      el('div', { style: { font: "700 16px 'Quicksand', sans-serif", color: 'var(--text-primary)' } }, 'Forest School'),
+      el('div', { style: { font: "400 13.5px/1.6 'Nunito', sans-serif", color: 'var(--text-body)', marginTop: '8px' } }, 'Rooted in Scandinavian outdoor traditions, Forest School gives children regular, all-weather time in a natural space to explore in their own way. Learning follows the child and the seasons — building dens, mixing mud, hunting for minibeasts — and gently includes manageable risk, like balancing on a log, to build confidence, resilience, and a lifelong bond with nature.'),
     ]),
 
     el('div', { class: 'section-label', style: { marginTop: '22px' } }, 'How we label milestones'),

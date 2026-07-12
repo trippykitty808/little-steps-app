@@ -27,7 +27,7 @@ export function renderProgress(vals, actions) {
     }, [
       el('div', {}, [
         el('div', { style: { font: "600 14px 'Quicksand', sans-serif", color: 'var(--text-primary)' } }, 'Not sure what "Emerging" means?'),
-        el('div', { style: { font: "400 12.5px 'Nunito', sans-serif", color: 'var(--waldorf-fg)', marginTop: '2px' } }, 'Read our Montessori & Waldorf guide'),
+        el('div', { style: { font: "400 12.5px 'Nunito', sans-serif", color: 'var(--waldorf-fg)', marginTop: '2px' } }, 'Read our approaches guide'),
       ]),
       el('div', { style: { font: "700 16px 'Nunito', sans-serif", color: 'var(--waldorf-fg)' } }, '→'),
     ]),

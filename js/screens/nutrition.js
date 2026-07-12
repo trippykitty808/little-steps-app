@@ -5,6 +5,64 @@ function recipeAgeLabel(r) {
   return `From ${f(r.ageMin)}`;
 }
 
+// ---------- Meal plan section (weekly) ----------
+function renderMealPlan(vals, actions) {
+  return el('div', {}, [
+    // week nav
+    el('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '18px' } }, [
+      el('div', { style: { width: '34px', height: '34px', borderRadius: '10px', background: '#fff', border: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', font: "700 16px 'Nunito', sans-serif", color: 'var(--text-primary)' }, onClick: () => actions.mealPrevWeek() }, '‹'),
+      el('div', { style: { flex: '1', textAlign: 'center' } }, [
+        el('div', { style: { font: "700 16px 'Quicksand', sans-serif", color: 'var(--text-primary)' } }, vals.mealWeekLabel),
+        el('div', { style: { font: "600 11.5px 'Quicksand', sans-serif", color: 'var(--sage)', cursor: 'pointer', marginTop: '2px' }, onClick: () => actions.mealToday() }, 'Jump to today'),
+      ]),
+      el('div', { style: { width: '34px', height: '34px', borderRadius: '10px', background: '#fff', border: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', font: "700 16px 'Nunito', sans-serif", color: 'var(--text-primary)' }, onClick: () => actions.mealNextWeek() }, '›'),
+    ]),
+
+    el('div', { style: { marginTop: '14px', display: 'flex', flexDirection: 'column', gap: '10px' } },
+      vals.mealWeek.map((day) => el('div', { style: { background: '#fff', border: `1px solid ${day.isToday ? 'var(--sage)' : 'var(--card-border)'}`, borderRadius: '16px', padding: '12px 14px' } }, [
+        el('div', { style: { font: "700 13px 'Quicksand', sans-serif", color: day.isToday ? 'var(--sage)' : 'var(--text-primary)' } }, `${day.dayFull} · ${day.dateLabel}${day.isToday ? ' · Today' : ''}`),
+        el('div', { style: { marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '8px' } },
+          day.slots.map((slot) => el('div', { style: { display: 'flex', gap: '10px', alignItems: 'flex-start' } }, [
+            el('div', { style: { width: '64px', flex: 'none', font: "600 11px 'Nunito', sans-serif", letterSpacing: '.02em', textTransform: 'uppercase', color: 'var(--text-muted-3)', paddingTop: '7px' } }, slot.mealType),
+            el('div', { style: { flex: '1', display: 'flex', flexWrap: 'wrap', gap: '6px', alignItems: 'center' } }, [
+              ...slot.entries.map((e) => el('div', { style: { display: 'flex', alignItems: 'center', gap: '6px', background: e.recipe.color, borderRadius: '100px', padding: '4px 6px 4px 10px' } }, [
+                el('div', { style: { fontSize: '14px' } }, e.recipe.emoji),
+                el('div', { style: { font: "600 11.5px 'Quicksand', sans-serif", color: 'var(--text-primary)' } }, e.recipe.name),
+                el('div', { style: { width: '16px', height: '16px', borderRadius: '50%', background: 'rgba(67,65,75,.18)', color: 'var(--text-primary)', font: "700 10px 'Nunito', sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }, onClick: (ev) => { ev.stopPropagation(); actions.removeMeal(e.id); } }, '×'),
+              ])),
+              el('div', { style: { font: "600 12px 'Quicksand', sans-serif", color: 'var(--sage)', cursor: 'pointer', padding: '4px 6px' }, onClick: () => actions.openMealPick(day.key, slot.mealType) }, '+ Add'),
+            ]),
+          ]))),
+      ]))),
+
+    el('div', { class: 'btn-primary', style: { marginTop: '16px' }, onClick: () => actions.goShoppingList() }, '🛒  Shopping list for this week'),
+  ]);
+}
+
+// Overlay: pick a recipe for a chosen day + meal slot.
+export function renderMealPickOverlay(vals, actions) {
+  const list = vals.mealPickRecipes;
+  const overlay = el('div', { class: 'overlay', onClick: () => actions.closeMealPick() });
+  const sheet = el('div', { class: 'overlay-sheet', style: { maxHeight: '78vh', display: 'flex', flexDirection: 'column' }, onClick: (e) => e.stopPropagation() }, [
+    el('div', { style: { font: "700 12px 'Nunito', sans-serif", letterSpacing: '.08em', textTransform: 'uppercase', color: 'var(--text-muted-3)', padding: '2px 6px 8px' } }, `Add a ${vals.mealPick ? vals.mealPick.mealType.toLowerCase() : ''} recipe`),
+    list.length
+      ? el('div', { style: { overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px', paddingRight: '2px' } },
+          list.map((r) => el('div', {
+            style: { display: 'flex', alignItems: 'center', gap: '12px', padding: '8px', borderRadius: '12px', cursor: 'pointer', background: '#fff', border: '1px solid var(--card-border)' },
+            onClick: () => actions.addMealToPlan(r.id),
+          }, [
+            el('div', { style: { width: '42px', height: '42px', flex: 'none', borderRadius: '10px', background: r.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px' } }, r.emoji),
+            el('div', { style: { flex: '1' } }, [
+              el('div', { style: { font: "600 13.5px 'Quicksand', sans-serif", color: 'var(--text-primary)' } }, r.name),
+              el('div', { style: { font: "400 11.5px 'Nunito', sans-serif", color: 'var(--text-muted-2)', marginTop: '1px' } }, r.allergens.length ? `Contains: ${r.allergens.join(', ')}` : 'No common allergens'),
+            ]),
+          ])))
+      : el('div', { style: { font: "400 13px 'Nunito', sans-serif", color: 'var(--text-muted-2)', padding: '16px 6px' } }, `No ${vals.mealPick ? vals.mealPick.mealType.toLowerCase() : ''} recipes fit this age yet. Browse the full library under Recipes.`),
+  ]);
+  overlay.appendChild(sheet);
+  return overlay;
+}
+
 // ---------- Stage guide section ----------
 function renderGuide(vals, actions) {
   const c = vals.nutritionContent;
@@ -129,13 +187,16 @@ export function renderNutrition(vals, actions) {
       el('div', { style: { font: "400 12.5px/1.55 'Nunito', sans-serif", color: 'var(--text-body)' } }, vals.nutritionDisclaimer),
     ]),
 
-    // Guide / Recipes segmented control
-    el('div', { style: { display: 'flex', gap: '8px', marginTop: '18px', background: '#F6F1E4', borderRadius: '100px', padding: '4px' } }, [
-      el('div', { style: { flex: '1', textAlign: 'center', padding: '9px 0', borderRadius: '100px', cursor: 'pointer', font: "600 13px 'Quicksand', sans-serif", background: vals.nutritionTab === 'guide' ? '#fff' : 'transparent', color: vals.nutritionTab === 'guide' ? 'var(--text-primary)' : 'var(--text-muted-2)' }, onClick: () => actions.setNutritionTab('guide') }, 'Stage guide'),
-      el('div', { style: { flex: '1', textAlign: 'center', padding: '9px 0', borderRadius: '100px', cursor: 'pointer', font: "600 13px 'Quicksand', sans-serif", background: vals.nutritionTab === 'recipes' ? '#fff' : 'transparent', color: vals.nutritionTab === 'recipes' ? 'var(--text-primary)' : 'var(--text-muted-2)' }, onClick: () => actions.setNutritionTab('recipes') }, 'Recipes'),
-    ]),
+    // Guide / Recipes / Meal plan segmented control
+    el('div', { style: { display: 'flex', gap: '6px', marginTop: '18px', background: '#F6F1E4', borderRadius: '100px', padding: '4px' } },
+      [['guide', 'Guide'], ['recipes', 'Recipes'], ['meals', 'Meal plan']].map(([key, label]) => el('div', {
+        style: { flex: '1', textAlign: 'center', padding: '9px 0', borderRadius: '100px', cursor: 'pointer', font: "600 12.5px 'Quicksand', sans-serif", background: vals.nutritionTab === key ? '#fff' : 'transparent', color: vals.nutritionTab === key ? 'var(--text-primary)' : 'var(--text-muted-2)' },
+        onClick: () => actions.setNutritionTab(key),
+      }, label))),
 
-    vals.nutritionTab === 'recipes' ? renderRecipes(vals, actions) : renderGuide(vals, actions),
+    vals.nutritionTab === 'recipes' ? renderRecipes(vals, actions)
+      : vals.nutritionTab === 'meals' ? renderMealPlan(vals, actions)
+        : renderGuide(vals, actions),
     el('div', { style: { height: '16px' } }),
   ]);
 }

@@ -55,8 +55,8 @@ export function renderProfile(vals, actions) {
       ]),
       el('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--lavender-tint)', borderRadius: '16px', padding: '14px 16px', cursor: 'pointer' }, onClick: () => actions.goGuide() }, [
         el('div', {}, [
-          el('div', { style: { font: "600 14px 'Quicksand', sans-serif", color: 'var(--text-primary)' } }, 'Montessori & Waldorf Guide'),
-          el('div', { style: { font: "400 12px 'Nunito', sans-serif", color: 'var(--waldorf-fg)', marginTop: '2px' } }, 'Both methods explained, plus trusted resources'),
+          el('div', { style: { font: "600 14px 'Quicksand', sans-serif", color: 'var(--text-primary)' } }, 'Approaches Guide'),
+          el('div', { style: { font: "400 12px 'Nunito', sans-serif", color: 'var(--waldorf-fg)', marginTop: '2px' } }, 'Montessori, Waldorf & Forest School explained, plus resources'),
         ]),
         el('div', { style: { font: "700 16px 'Nunito', sans-serif", color: 'var(--waldorf-fg)' } }, '→'),
       ]),
