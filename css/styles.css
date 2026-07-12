@@ -237,8 +237,9 @@ textarea.text-area {
   background: none;
   border: none;
 }
+.tab-item { padding: 6px 1px; border-radius: 14px; }
 .tab-item svg { display: block; margin: 0 auto; }
-.tab-item .tab-label { font: 700 10.5px var(--font-heading); margin-top: 4px; }
+.tab-item .tab-label { font: 700 9.5px var(--font-heading); margin-top: 4px; white-space: nowrap; letter-spacing: -.01em; }
 
 .overlay {
   position: absolute;
