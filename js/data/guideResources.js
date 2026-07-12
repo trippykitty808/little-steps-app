@@ -9,6 +9,8 @@ export const GUIDE_RESOURCES = [
   { name: 'American Montessori Society (AMS)', desc: 'Montessori resources and school accreditation in the US.', url: 'https://amshq.org' },
   { name: 'Association of Waldorf Schools of North America', desc: 'Official Waldorf education body for the US and Canada.', url: 'https://www.waldorfeducation.org' },
   { name: 'Waldorf Early Childhood Association (WECAN)', desc: 'Waldorf guidance specifically for birth-to-seven.', url: 'https://waldorfearlychildhood.org' },
+  { name: 'Forest School Association', desc: 'The UK body defining the Forest School ethos and principles.', url: 'https://forestschoolassociation.org' },
+  { name: 'Muddy Faces — Outdoor Learning Hub', desc: 'A large library of Forest School and nature-play activities.', url: 'https://muddyfaces.co.uk/outdoor-hub/' },
 ];
 
 export const GUIDE_MEDIA = [
@@ -20,4 +22,5 @@ export const GUIDE_MEDIA = [
   { name: 'We Nurture — Chinyelu Kunz', desc: 'Podcast on Waldorf-inspired parenting and rhythm at home.', url: 'https://wenurturecollective.com' },
   { name: 'A Waldorf Journey', desc: 'Blog and podcast from a trained Waldorf teacher.', url: 'https://www.awaldorfjourney.com' },
   { name: 'Moon Child Blog — Sarah Baldwin', desc: 'Waldorf education, parenting, and craft tutorials.', url: 'https://www.bellalunatoys.com/blogs/moon-child-blog-sarah-baldwin' },
+  { name: 'Early Impact Learning — Forest School', desc: 'Practical outdoor and Forest School activity ideas by age.', url: 'https://earlyimpactlearning.com/forest-school-activities-for-toddlers/' },
 ];

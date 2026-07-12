@@ -635,6 +635,106 @@ export const ACTIVITIES = [
       { name: 'Sink or Float: Toddler Science Experiment', desc: 'A simple, low-prep version for the youngest scientists.', url: 'https://busytoddler.com/sink-or-float-toddler-science/' },
       { name: 'Easy Sink or Float Science Experiment for Preschool', desc: 'Adds prediction and sorting for older preschoolers.', url: 'https://lifeovercs.com/sink-float-science-activity-preschool/' },
     ] },
+
+  // ---------- Forest School (all-weather, child-led outdoor play) ----------
+  { id: 'a49', name: 'Mud Kitchen Play', tradition: 'Forest School', category: 'Nature & Outdoors', duration: '20–40 min', ageMin: 24, ageMax: 60, color: '#C9DDB6',
+    materials: ['A patch of soil or a tub of dirt', 'Old pots, pans, muffin tins, and spoons', 'A source of water (watering can or jug)', 'Natural add-ins: leaves, petals, grass, seed pods', 'A low table, crate, or tree stump (optional)'],
+    steps: [
+      'Set up a low "kitchen" outside: pots and utensils within reach, a patch of soil, and some water.',
+      'Offer the water and containers and simply let your child mix, pour, and "cook" — there’s no recipe to follow.',
+      'Name the textures as they play: gloopy, crumbly, runny, thick.',
+      'Invite them to add natural "ingredients" from the garden — a few leaves or petals for their soup.',
+      'Wash hands and rinse the pots together as part of finishing the work.',
+    ],
+    resources: [
+      { name: 'Forest School Activities & Ideas (Muddy Faces)', desc: 'A trusted UK outdoor-learning hub, including mud play.', url: 'https://muddyfaces.co.uk/outdoor-hub/forest-school/forest-school-activities/' },
+      { name: '15 Forest School Activities for Toddlers', desc: 'Simple, age-appropriate outdoor ideas including mud kitchens.', url: 'https://earlyimpactlearning.com/forest-school-activities-for-toddlers/' },
+    ] },
+  { id: 'a50', name: 'Puddle Splashing & Rain Walk', tradition: 'Forest School', category: 'Movement', duration: '15–30 min', ageMin: 18, ageMax: 48, color: '#B9C7DE',
+    materials: ['Waterproof coat, trousers, and wellies (dress for the weather)', 'A dry change of clothes for after'],
+    steps: [
+      'Dress for the weather — the Forest School motto is "there’s no bad weather, only unsuitable clothing."',
+      'Head out in light rain and go looking for puddles.',
+      'Jump, stomp, and splash together; notice the splashes and ripples.',
+      'Pause to feel the rain on your hands and listen to the sound it makes.',
+      'Come in, dry off, and warm up together afterward.',
+    ],
+    resources: [
+      { name: 'Forest School Association', desc: 'The UK body behind the ethos of regular, all-weather outdoor play.', url: 'https://forestschoolassociation.org/what-is-forest-school/' },
+    ] },
+  { id: 'a51', name: 'Build a Stick Den', tradition: 'Forest School', category: 'Nature & Outdoors', duration: '20–40 min', ageMin: 30, ageMax: 60, color: '#C9DDB6',
+    materials: ['Fallen sticks and branches (nothing pulled from living trees)', 'A low branch, fence, or two close trees to lean against', 'A blanket or tarp (optional)'],
+    steps: [
+      'Gather fallen sticks and branches together — a good hunt in itself.',
+      'Lean the longest branches against a low sturdy branch or fence to make a simple frame.',
+      'Fill in the sides with more sticks, and drape a blanket over if you like.',
+      'Test it gently for sturdiness before anyone goes near it.',
+      'Sit inside your den together — read a story or share a snack.',
+      'Return the sticks to the woods when you’re done, or leave the den for next time.',
+    ],
+    resources: [
+      { name: 'Forest School Activities & Ideas (Muddy Faces)', desc: 'Den-building and shelter ideas for young children.', url: 'https://muddyfaces.co.uk/outdoor-hub/forest-school/forest-school-activities/' },
+    ] },
+  { id: 'a52', name: 'Nature Scavenger Hunt', tradition: 'Forest School', category: 'Cultural Studies', duration: '20–30 min', ageMin: 24, ageMax: 60, color: '#C9DDB6',
+    materials: ['A simple picture list or a small egg carton to fill', 'A basket or bag for finds'],
+    steps: [
+      'Make a simple picture list for a non-reader: a leaf, a stone, a feather, something round, something rough.',
+      'Head outside and hunt for each thing together, ticking off or collecting as you go.',
+      'Talk about each find — its color, texture, and where it came from.',
+      'For an egg-carton version, give one cup per item to fill.',
+      'Lay everything out at the end and revisit what you found.',
+    ],
+    resources: [
+      { name: '31 Forest School Activities for Kids', desc: 'Scavenger hunts and other outdoor exploration ideas.', url: 'https://anurisjourney.com/forest-school-activities-for-kids-that-encourage-outdoor-play/' },
+    ] },
+  { id: 'a53', name: 'Minibeast Safari', tradition: 'Forest School', category: 'Nature & Outdoors', duration: '15–30 min', ageMin: 30, ageMax: 60, color: '#C9DDB6',
+    materials: ['A magnifying glass (optional)', 'A small clear pot for a closer look (optional)'],
+    steps: [
+      'Head to a spot with logs, leaf litter, or long grass.',
+      'Gently look under a log or lift some leaves to see who lives there — worms, woodlice, beetles, snails.',
+      'Observe quietly with the magnifier; look but let the minibeasts be.',
+      'Talk about how each one moves and what it might be doing.',
+      'Carefully put logs and leaves back the way you found them, so you don’t disturb their home.',
+    ],
+    resources: [
+      { name: '15 Forest School Activities for Toddlers', desc: 'Bug hunts and gentle nature observation for little ones.', url: 'https://earlyimpactlearning.com/forest-school-activities-for-toddlers/' },
+    ] },
+  { id: 'a54', name: 'Barefoot Sensory Walk', tradition: 'Forest School', category: 'Sensorial', duration: '10–20 min', ageMin: 18, ageMax: 48, color: '#B9C7DE',
+    materials: ['A safe, checked outdoor area with different natural surfaces (grass, sand, smooth stones, mud)'],
+    steps: [
+      'First, walk the area yourself to check it’s free of anything sharp.',
+      'Take off shoes and socks and step onto the grass together.',
+      'Move slowly across different surfaces — cool grass, warm sand, smooth pebbles, soft mud.',
+      'Describe how each one feels underfoot: tickly, squishy, bumpy, cold.',
+      'Rinse feet at the end and talk about which surface felt best.',
+    ],
+    resources: [
+      { name: '30+ Nature Play Ideas for the Early Years', desc: 'Sensory, grounding outdoor play for young children.', url: 'https://treehouseschoolhouse.com/blog/preschool-nature-play-ideas' },
+    ] },
+  { id: 'a55', name: 'Log Walking & Woodland Balancing', tradition: 'Forest School', category: 'Movement', duration: '15–25 min', ageMin: 24, ageMax: 54, color: '#D8C7E6',
+    materials: ['A fallen log, low wall, or thick branch to balance on', 'A gentle slope or tree roots to clamber over (optional)'],
+    steps: [
+      'Find a low, stable log or branch, close to the ground.',
+      'Show heel-to-toe steps along it yourself first.',
+      'Offer a hand for the first few crossings, then step back as confidence grows — this kind of managed risk builds coordination and courage.',
+      'Add a small challenge: stepping over roots, or clambering up a gentle slope.',
+      'Cheer their effort rather than rushing to catch them, staying close for safety.',
+    ],
+    resources: [
+      { name: 'Forest School Association — What is Forest School?', desc: 'On managed risk and physical, child-led outdoor play.', url: 'https://forestschoolassociation.org/what-is-forest-school/' },
+    ] },
+  { id: 'a56', name: 'Nature Weaving on a Stick Loom', tradition: 'Forest School', category: 'Handwork', duration: '20–30 min', ageMin: 36, ageMax: 60, color: '#F4D9C6',
+    materials: ['A Y-shaped stick (or a cardboard frame)', 'Wool or garden twine', 'Found leaves, long grasses, flowers, and feathers'],
+    steps: [
+      'Make a loom (one-time prep): wind wool back and forth across the fork of a Y-shaped stick to make parallel "strings."',
+      'Go on a short walk to gather leaves, grasses, and flowers.',
+      'Show your child how to thread a stem or leaf over and under the wool strings.',
+      'Let them weave in their finds however they like, filling the loom.',
+      'Hang the finished weaving up to admire, and watch it change as it dries.',
+    ],
+    resources: [
+      { name: '30+ Nature Play Ideas for the Early Years', desc: 'Nature weaving and natural-materials handwork.', url: 'https://treehouseschoolhouse.com/blog/preschool-nature-play-ideas' },
+    ] },
 ];
 
 export function fmtAgeRange(min, max) {
