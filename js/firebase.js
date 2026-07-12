@@ -117,6 +117,10 @@ export async function addMemory(uid, childId, memory) {
   return ref.id;
 }
 
+export async function updateMemory(uid, childId, memoryId, patch) {
+  await updateDoc(doc(db, 'users', uid, 'children', childId, 'memories', memoryId), patch);
+}
+
 // ---------- Handoff notes ----------
 export async function fetchNotes(uid, childId) {
   const q = query(collection(db, 'users', uid, 'children', childId, 'notes'), orderBy('createdAt', 'desc'), limit(100));
@@ -131,14 +135,16 @@ export async function addNote(uid, childId, note) {
   return ref.id;
 }
 
-// ---------- Photo uploads ----------
+// ---------- Media uploads (photos & video) ----------
 // Replaces the design prototype's design-tool-only <image-slot> placeholder
-// with a real upload to Firebase Storage. Returns a public download URL.
+// with a real upload to Firebase Storage. Works for any file (image or video);
+// returns a public download URL.
 export async function uploadPhoto(uid, pathParts, file) {
   const path = ['users', uid, ...pathParts].join('/');
   const storageRef = ref(storage, path);
   await uploadBytes(storageRef, file);
   return getDownloadURL(storageRef);
 }
+export const uploadMedia = uploadPhoto; // clearer name for video-or-photo callers
 
 export { auth };

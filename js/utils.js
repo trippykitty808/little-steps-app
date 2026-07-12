@@ -16,6 +16,39 @@ export function stageForMonths(m) {
   return 'Kindergarten Prep';
 }
 
+// Reads a video file's length (seconds) via a throwaway <video> element, so we
+// can enforce the short-clip cap before uploading. Resolves 0 if unreadable.
+export function getVideoDuration(file) {
+  return new Promise((resolve) => {
+    try {
+      const url = URL.createObjectURL(file);
+      const v = document.createElement('video');
+      v.preload = 'metadata';
+      v.onloadedmetadata = () => { const d = v.duration; URL.revokeObjectURL(url); resolve(Number.isFinite(d) ? d : 0); };
+      v.onerror = () => { URL.revokeObjectURL(url); resolve(0); };
+      v.src = url;
+    } catch (_) { resolve(0); }
+  });
+}
+
+// 'YYYY-MM-DD' for a native <input type="date"> value, using local time
+// (never toISOString, which shifts to UTC and can land on the wrong day).
+export function todayInputDate(d = new Date()) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+// 'YYYY-MM-DD' → friendly display like "July 8". Parsed as a local date.
+export function formatDateInput(yyyymmdd) {
+  if (!yyyymmdd) return '';
+  const parts = String(yyyymmdd).split('-').map(Number);
+  if (parts.length !== 3 || parts.some((n) => !Number.isFinite(n))) return yyyymmdd;
+  const [y, m, d] = parts;
+  return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+}
+
 export function formatDateShort(d = new Date()) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }

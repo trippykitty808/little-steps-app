@@ -7,7 +7,7 @@ import * as fb from './firebase.js';
 import { ACTIVITIES, categoryIconSvg, fmtAgeRange } from './data/activities.js';
 import { MILESTONES, DOMAIN_ORDER, DOMAIN_COLORS, statusStyle } from './data/milestones.js';
 import { GUIDE_RESOURCES, GUIDE_MEDIA } from './data/guideResources.js';
-import { monthsToLabel, stageForMonths, shareText } from './utils.js';
+import { monthsToLabel, stageForMonths, shareText, getVideoDuration, todayInputDate, formatDateInput } from './utils.js';
 
 const FOCUS_LIST = ['Practical Life', 'Sensorial', 'Language', 'Mathematics', 'Cultural Studies', 'Movement', 'Nature & Outdoors', 'Rhythm & Ritual', 'Handwork', 'Creative Arts'];
 const ROLE_OPTIONS = ['Grandparent', 'Parent', 'Nanny/Sitter', 'Other'];
@@ -24,6 +24,20 @@ const STAGES = [
   { key: 'Preschooler', min: 36, max: 47 },
   { key: 'Kindergarten Prep', min: 48, max: 72 },
 ];
+
+// Scrapbook media limits. Videos are capped short so a scrapbook full of
+// memories stays comfortably inside Firebase's free storage tier.
+const MEMORY_MEDIA_MAX = 8;      // photos + videos per memory entry
+const VIDEO_MAX_SECONDS = 60;    // clip length cap
+const VIDEO_MAX_BYTES = 100 * 1024 * 1024; // ~100MB per-clip safety net
+
+// A memory may be stored as the new media[] array, or (older entries) a single
+// photoURL. Normalize both to a media list of {type, url}.
+function normalizeMedia(m) {
+  if (Array.isArray(m.media) && m.media.length) return m.media;
+  if (m.photoURL) return [{ type: 'photo', url: m.photoURL }];
+  return [];
+}
 
 // A saved caregiverRole that isn't one of the standard pills is a previously
 // entered custom "Other" value — re-select the Other pill and restore the text.
@@ -64,7 +78,10 @@ export const ui = {
   logNoteText: '',
   logPhoto: { previewUrl: null, url: null, uploading: false },
   newMemoryCaption: '',
-  newMemoryPhoto: { previewUrl: null, url: null, uploading: false },
+  newMemoryDate: '',
+  newMemoryMedia: [], // [{ localId, type:'photo'|'video', previewUrl, url, uploading, error }]
+  editingMemoryId: null,
+  mediaError: '',
   noteMood: null,
   noteMessage: '',
 };
@@ -263,7 +280,8 @@ export const actions = {
     const newLogs = [{ id: logId, ...entry }, ...data.logs];
     let newMemories = data.memories;
     if (noteText || photoURL) {
-      const memory = { caption: noteText || (a.name + ' — done today.'), date: todayShortLabel(now), tag: a.name, photoURL: photoURL || null };
+      const media = photoURL ? [{ type: 'photo', url: photoURL }] : [];
+      const memory = { caption: noteText || (a.name + ' — done today.'), date: todayShortLabel(now), dateKey: todayKey(now), tag: a.name, media };
       const memId = await fb.addMemory(data.uid, data.activeChildId, memory);
       newMemories = [{ id: memId, ...memory }, ...data.memories];
     }
@@ -329,15 +347,75 @@ export const actions = {
     });
   },
 
-  goMemoryNew() { setUI({ newMemoryCaption: '', newMemoryPhoto: { previewUrl: null, url: null, uploading: false }, screen: 'memory-new' }); },
+  goMemoryNew() {
+    setUI({ newMemoryCaption: '', newMemoryDate: todayInputDate(), newMemoryMedia: [], editingMemoryId: null, mediaError: '', screen: 'memory-new' });
+  },
+  editMemory(id) {
+    const m = data.memories.find((x) => x.id === id);
+    if (!m) return;
+    const media = normalizeMedia(m).map((mi, i) => ({
+      localId: 'existing-' + i + '-' + Date.now(), type: mi.type || 'photo', previewUrl: mi.url, url: mi.url, uploading: false,
+    }));
+    setUI({
+      editingMemoryId: id,
+      newMemoryCaption: m.caption === 'A little moment worth remembering.' ? '' : (m.caption || ''),
+      newMemoryDate: m.dateKey || todayInputDate(),
+      newMemoryMedia: media,
+      mediaError: '',
+      screen: 'memory-new',
+    });
+  },
   onNewMemoryCaptionChange(e) { ui.newMemoryCaption = e.target.value; },
-  onNewMemoryPhotoFile(file) { handlePhotoDraftUpload('newMemoryPhoto', ['children', data.activeChildId, 'memories', 'mem-' + Date.now() + '.jpg'], file); },
+  onNewMemoryDateChange(e) { ui.newMemoryDate = e.target.value; },
+  async addNewMemoryMediaFile(file) {
+    if (!file) return;
+    if (ui.newMemoryMedia.length >= MEMORY_MEDIA_MAX) {
+      setUI({ mediaError: `You can add up to ${MEMORY_MEDIA_MAX} photos or videos per memory.` });
+      return;
+    }
+    const isVideo = (file.type || '').startsWith('video/');
+    if (isVideo) {
+      if (file.size > VIDEO_MAX_BYTES) { setUI({ mediaError: 'That video is too large — try a shorter clip.' }); return; }
+      const dur = await getVideoDuration(file);
+      if (dur && dur > VIDEO_MAX_SECONDS + 1) {
+        setUI({ mediaError: `Videos need to be ${VIDEO_MAX_SECONDS} seconds or shorter — this one is about ${Math.round(dur)}s. Try trimming it in your phone’s photo app first.` });
+        return;
+      }
+    }
+    const localId = 'm' + Date.now() + Math.random().toString(36).slice(2, 6);
+    const previewUrl = URL.createObjectURL(file);
+    const item = { localId, type: isVideo ? 'video' : 'photo', previewUrl, url: null, uploading: true, error: false };
+    setUI({ newMemoryMedia: [...ui.newMemoryMedia, item], mediaError: '' });
+    const ext = isVideo ? (file.name.split('.').pop() || 'mp4') : 'jpg';
+    const path = ['children', data.activeChildId, 'memories', 'mem-' + Date.now() + '-' + localId + '.' + ext];
+    try {
+      const url = await fb.uploadMedia(data.uid, path, file);
+      setUI({ newMemoryMedia: ui.newMemoryMedia.map((mi) => (mi.localId === localId ? { ...mi, url, uploading: false } : mi)) });
+    } catch (err) {
+      console.error('Media upload failed', err);
+      setUI({ newMemoryMedia: ui.newMemoryMedia.map((mi) => (mi.localId === localId ? { ...mi, uploading: false, error: true } : mi)), mediaError: 'That upload didn’t go through — please try again.' });
+    }
+  },
+  removeNewMemoryMedia(localId) {
+    setUI({ newMemoryMedia: ui.newMemoryMedia.filter((mi) => mi.localId !== localId) });
+  },
   async saveMemory() {
+    const media = ui.newMemoryMedia.filter((mi) => mi.url && !mi.uploading && !mi.error).map((mi) => ({ type: mi.type, url: mi.url }));
     const caption = (ui.newMemoryCaption || '').trim() || 'A little moment worth remembering.';
-    const memory = { caption, date: todayShortLabel(), tag: null, photoURL: ui.newMemoryPhoto.url || null };
+    const dateKey = ui.newMemoryDate || todayInputDate();
+    const dateLabel = formatDateInput(dateKey);
+    if (ui.editingMemoryId) {
+      const id = ui.editingMemoryId;
+      const patch = { caption, media, date: dateLabel, dateKey, photoURL: null };
+      setData({ memories: data.memories.map((m) => (m.id === id ? { ...m, ...patch } : m)) });
+      fb.updateMemory(data.uid, data.activeChildId, id, patch).catch((e) => console.error(e));
+      setUI({ selectedMemoryId: id, screen: 'memory-detail', editingMemoryId: null, newMemoryMedia: [] });
+      return;
+    }
+    const memory = { caption, media, date: dateLabel, dateKey, tag: null };
     const id = await fb.addMemory(data.uid, data.activeChildId, memory);
     setData({ memories: [{ id, ...memory }, ...data.memories] });
-    setUI({ selectedMemoryId: id, screen: 'scrapbook', scrapbookTab: 'memories' });
+    setUI({ selectedMemoryId: id, screen: 'scrapbook', scrapbookTab: 'memories', newMemoryMedia: [] });
   },
   openMemory(id) { setUI({ selectedMemoryId: id, screen: 'memory-detail' }); },
 
@@ -505,8 +583,12 @@ export function getViewState() {
 
   const memories = data.memories.map((m) => {
     const catInfo = m.tag ? activityInfoByName[m.tag] : null;
+    const media = normalizeMedia(m);
     return {
       ...m,
+      media,
+      cover: media[0] || null,
+      mediaCount: media.length,
       hasIcon: !!catInfo,
       iconHtml: catInfo ? categoryIconSvg(catInfo.category, '#fff') : '',
       iconHtmlDark: catInfo ? categoryIconSvg(catInfo.category, '#7A5FA0') : '',
@@ -559,7 +641,13 @@ export function getViewState() {
     scrapbookTab: s.scrapbookTab,
     memories, selectedMemory,
     memorySelectMode: s.memorySelectMode, memorySelectionCount: s.selectedMemoryIds.length,
-    newMemoryCaption: s.newMemoryCaption, newMemoryPhoto: s.newMemoryPhoto,
+    newMemoryCaption: s.newMemoryCaption,
+    newMemoryDate: s.newMemoryDate,
+    newMemoryMedia: s.newMemoryMedia,
+    newMemoryUploading: s.newMemoryMedia.some((mi) => mi.uploading),
+    memoryMediaFull: s.newMemoryMedia.length >= MEMORY_MEDIA_MAX,
+    memoryEditing: !!s.editingMemoryId,
+    mediaError: s.mediaError,
 
     moodOptions: ['smooth', 'mixed', 'tough'].map((key) => ({ key, ...MOOD_META[key], active: s.noteMood === key })),
     notesWithMeta, noteSelectMode: s.noteSelectMode, noteSelectionCount: s.selectedNoteIds.length,
