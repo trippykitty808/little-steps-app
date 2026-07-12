@@ -7,6 +7,7 @@ import * as fb from './firebase.js';
 import { ACTIVITIES, categoryIconSvg, fmtAgeRange } from './data/activities.js';
 import { MILESTONES, DOMAIN_ORDER, DOMAIN_COLORS, statusStyle } from './data/milestones.js';
 import { GUIDE_RESOURCES, GUIDE_MEDIA } from './data/guideResources.js';
+import { STAGE_NUTRITION, NUTRITION_STAGE_ORDER, PLANT_BASED_ESSENTIALS, NUTRITION_SOURCES, NUTRITION_DISCLAIMER } from './data/nutrition.js';
 import { monthsToLabel, stageForMonths, shareText, getVideoDuration, todayInputDate, formatDateInput } from './utils.js';
 import { parseKey, toKey, addDays, addMonths, prevSeasonAnchor, nextSeasonAnchor } from './planner.js';
 
@@ -103,6 +104,9 @@ export const ui = {
   planningActivityId: null, // activity being scheduled from Activity Detail
   planActivityDate: '', // date chosen in the Activity Detail "add to plan" overlay
   planToast: '',
+
+  // Nutrition
+  nutritionStage: '', // which developmental stage's guide is being viewed
 };
 
 export const data = {
@@ -277,6 +281,8 @@ export const actions = {
   goActivities() { go('activities'); },
   goProgress() { go('progress'); },
   goGuide() { go('guide'); },
+  goNutrition() { setUI({ screen: 'nutrition', nutritionStage: ui.nutritionStage || stageForMonths(activeChild().ageMonths) }); },
+  setNutritionStage(key) { setUI({ nutritionStage: key }); },
   goProfile() { go('profile'); },
   goScrapbook() { setUI({ screen: 'scrapbook', scrapbookTab: 'memories' }); },
   goScrapbookMemories() { setUI({ screen: 'scrapbook', scrapbookTab: 'memories' }); },
@@ -736,6 +742,15 @@ export function getViewState() {
     logNoteText: s.logNoteText, logPhoto: s.logPhoto,
 
     guideResources: GUIDE_RESOURCES, guideMedia: GUIDE_MEDIA,
+
+    // Nutrition
+    nutritionStage: s.nutritionStage || stageForMonths(child.ageMonths),
+    childStage: stageForMonths(child.ageMonths),
+    nutritionStageOptions: NUTRITION_STAGE_ORDER.map((key) => ({ key, active: (s.nutritionStage || stageForMonths(child.ageMonths)) === key, isChildStage: stageForMonths(child.ageMonths) === key })),
+    nutritionContent: STAGE_NUTRITION[s.nutritionStage || stageForMonths(child.ageMonths)],
+    nutritionEssentials: PLANT_BASED_ESSENTIALS,
+    nutritionSources: NUTRITION_SOURCES,
+    nutritionDisclaimer: NUTRITION_DISCLAIMER,
 
     scrapbookTab: s.scrapbookTab,
     memories, selectedMemory,

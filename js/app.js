@@ -19,6 +19,7 @@ import { renderMemoryNew } from './screens/memoryNew.js';
 import { renderMemoryDetail } from './screens/memoryDetail.js';
 import { renderPrintPreview } from './screens/printPreview.js';
 import { renderPlanner, renderDayPickOverlay, renderPlanActivityOverlay } from './screens/planner.js';
+import { renderNutrition } from './screens/nutrition.js';
 import { el } from './utils.js';
 
 const root = document.getElementById('app-root');
@@ -41,6 +42,7 @@ const SCREEN_RENDERERS = {
   'memory-detail': renderMemoryDetail,
   'print-preview': renderPrintPreview,
   'planner': renderPlanner,
+  'nutrition': renderNutrition,
 };
 
 function renderLoading() {
