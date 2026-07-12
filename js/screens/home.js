@@ -1,4 +1,5 @@
 import { el } from '../utils.js';
+import { parseKey, dayShort, monthShort } from '../planner.js';
 
 export function renderHome(vals, actions) {
   const s = vals.suggestedActivity;
@@ -40,6 +41,31 @@ export function renderHome(vals, actions) {
         el('div', { style: { font: "400 12.5px 'Nunito', sans-serif", color: 'var(--text-muted-2)', marginTop: '2px' } }, `${s.category} · ${s.duration}`),
       ]),
     ]) : null,
+
+    el('div', { style: { display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: '22px' } }, [
+      el('div', { class: 'section-label' }, 'Coming up'),
+      el('div', { style: { font: "600 12px 'Nunito', sans-serif", color: 'var(--sage)', cursor: 'pointer' }, onClick: () => actions.goPlanner() }, 'Open planner'),
+    ]),
+    vals.upcomingPlans.length
+      ? el('div', { style: { marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px' } }, vals.upcomingPlans.map((p) => {
+          const d = parseKey(p.dateKey);
+          const isToday = p.dateKey === vals.planTodayKey;
+          return el('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', background: '#fff', border: '1px solid var(--card-border)', borderRadius: '14px', padding: '10px 12px', cursor: 'pointer' }, onClick: () => actions.openActivity(p.activity.id) }, [
+            el('div', { style: { width: '42px', flex: 'none', textAlign: 'center' } }, [
+              el('div', { style: { font: "700 12px 'Quicksand', sans-serif", color: isToday ? 'var(--sage)' : 'var(--text-primary)' } }, isToday ? 'Today' : dayShort(d.getDay())),
+              el('div', { style: { font: "400 11px 'Nunito', sans-serif", color: 'var(--text-muted-5)' } }, `${monthShort(d.getMonth())} ${d.getDate()}`),
+            ]),
+            el('div', { style: { width: '36px', height: '36px', flex: 'none', borderRadius: '10px', background: p.activity.color, position: 'relative' }, html: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">${p.activity.iconHtml}</svg>` }),
+            el('div', { style: { flex: '1' } }, [
+              el('div', { style: { font: "600 13.5px 'Quicksand', sans-serif", color: 'var(--text-primary)' } }, p.activity.name),
+              el('div', { style: { font: "400 11.5px 'Nunito', sans-serif", color: 'var(--text-muted-2)', marginTop: '1px' } }, p.activity.category),
+            ]),
+          ]);
+        }))
+      : el('div', { style: { marginTop: '10px', background: '#fff', border: '1px dashed var(--card-border)', borderRadius: '14px', padding: '14px', textAlign: 'center', cursor: 'pointer' }, onClick: () => actions.goPlanner() }, [
+          el('div', { style: { font: "600 13px 'Quicksand', sans-serif", color: 'var(--text-primary)' } }, 'Nothing planned yet'),
+          el('div', { style: { font: "400 12px 'Nunito', sans-serif", color: 'var(--text-muted-2)', marginTop: '2px' } }, 'Tap to plan a few activities ahead'),
+        ]),
 
     el('div', { class: 'section-label', style: { marginTop: '22px' } }, 'Daily log'),
     el('div', { style: { marginTop: '10px', display: 'flex', flexDirection: 'column' } },
