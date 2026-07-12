@@ -9,9 +9,21 @@ import { MILESTONES, DOMAIN_ORDER, DOMAIN_COLORS, statusStyle } from './data/mil
 import { GUIDE_RESOURCES, GUIDE_MEDIA } from './data/guideResources.js';
 import { monthsToLabel, stageForMonths, shareText } from './utils.js';
 
-const FOCUS_LIST = ['Practical Life', 'Sensorial', 'Language', 'Movement', 'Nature & Outdoors', 'Rhythm & Ritual', 'Handwork', 'Creative Arts'];
+const FOCUS_LIST = ['Practical Life', 'Sensorial', 'Language', 'Mathematics', 'Cultural Studies', 'Movement', 'Nature & Outdoors', 'Rhythm & Ritual', 'Handwork', 'Creative Arts'];
 const ROLE_OPTIONS = ['Grandparent', 'Parent', 'Nanny/Sitter', 'Other'];
 const SWATCH_PALETTE = ['#C9DDB6', '#D8C7E6', '#F4D9C6', '#B9C7DE'];
+
+// Developmental stages, matching the age-stepper labels used elsewhere
+// (see stageForMonths in utils.js). Month ranges are inclusive and used to
+// decide which activities fall under each stage in the Activities filter.
+const STAGES = [
+  { key: 'Infant', min: 0, max: 11 },
+  { key: 'Young Toddler', min: 12, max: 17 },
+  { key: 'Toddler', min: 18, max: 23 },
+  { key: 'Young Preschooler', min: 24, max: 35 },
+  { key: 'Preschooler', min: 36, max: 47 },
+  { key: 'Kindergarten Prep', min: 48, max: 72 },
+];
 
 // A saved caregiverRole that isn't one of the standard pills is a previously
 // entered custom "Other" value — re-select the Other pill and restore the text.
@@ -32,7 +44,7 @@ export const ui = {
   scrapbookTab: 'memories',
   traditionFilter: 'all',
   focusAreaFilter: 'all',
-  ageFitOnly: false,
+  ageStageFilter: 'child', // 'child' (auto-scoped to active child's age), a stage key, or 'all'
   caregiverFlowFrom: 'onboarding', // or 'profile'
   milestoneBackTarget: 'progress', // or 'scrapbook-milestones'
   selectedActivityId: null,
@@ -259,9 +271,9 @@ export const actions = {
     setUI({ screen: 'home', logNoteText: '', logPhoto: { previewUrl: null, url: null, uploading: false } });
   },
 
-  toggleAgeFit() { setUI({ ageFitOnly: !ui.ageFitOnly }); },
   setTraditionFilter(key) { setUI({ traditionFilter: key }); },
   setFocusAreaFilter(key) { setUI({ focusAreaFilter: key }); },
+  setAgeStageFilter(key) { setUI({ ageStageFilter: key }); },
 
   ageMinus() { updateActiveChildLocal({ ageMonths: Math.max(3, activeChild().ageMonths - 1) }); },
   agePlus() { updateActiveChildLocal({ ageMonths: Math.min(72, activeChild().ageMonths + 1) }); },
@@ -429,9 +441,25 @@ export function getViewState() {
   const focusAreaFilters = ['all', ...FOCUS_LIST].map((key) => ({
     key, label: key === 'all' ? 'All areas' : key, active: s.focusAreaFilter === key,
   }));
+  const ageFilterOptions = [
+    { key: 'child', label: `For ${child.name}` },
+    ...STAGES.map((st) => ({ key: st.key, label: st.key })),
+    { key: 'all', label: 'All ages' },
+  ].map((o) => ({ ...o, active: s.ageStageFilter === o.key }));
+  const ageFilterCaption = s.ageStageFilter === 'child'
+    ? `Showing activities that fit ${child.name}’s age right now. Tap a stage to plan ahead or look back.`
+    : s.ageStageFilter === 'all'
+      ? 'Showing activities for every age.'
+      : `Showing activities for the ${s.ageStageFilter} stage.`;
+
   let visibleActivities = s.traditionFilter === 'all' ? activities : activities.filter((a) => a.tradition === s.traditionFilter);
   if (s.focusAreaFilter !== 'all') visibleActivities = visibleActivities.filter((a) => a.category === s.focusAreaFilter);
-  if (s.ageFitOnly) visibleActivities = visibleActivities.filter((a) => a.isGoodFit);
+  if (s.ageStageFilter === 'child') {
+    visibleActivities = visibleActivities.filter((a) => child.ageMonths >= a.ageMin && child.ageMonths <= a.ageMax);
+  } else if (s.ageStageFilter !== 'all') {
+    const st = STAGES.find((x) => x.key === s.ageStageFilter);
+    if (st) visibleActivities = visibleActivities.filter((a) => a.ageMin <= st.max && a.ageMax >= st.min);
+  }
 
   const milestonesDisplay = MILESTONES.map((m) => {
     const inst = data.milestones[m.key] || { status: 'not yet', emergingDate: null, achievedDate: null, note: '' };
@@ -513,7 +541,7 @@ export function getViewState() {
     activeChildPhotoURL: child.photoURL,
 
     activities, visibleActivities, traditionFilters, focusAreaFilters, selectedActivity, suggestedActivity,
-    ageFitOnly: s.ageFitOnly,
+    ageFilterOptions, ageFilterCaption,
 
     domains, domainsForScrapbook, selectedMilestone,
     milestoneBackLabel: s.milestoneBackTarget === 'scrapbook-milestones' ? 'Scrapbook' : 'Progress',
