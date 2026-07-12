@@ -8,6 +8,7 @@ import { ACTIVITIES, categoryIconSvg, fmtAgeRange } from './data/activities.js';
 import { MILESTONES, DOMAIN_ORDER, DOMAIN_COLORS, statusStyle } from './data/milestones.js';
 import { GUIDE_RESOURCES, GUIDE_MEDIA } from './data/guideResources.js';
 import { STAGE_NUTRITION, NUTRITION_STAGE_ORDER, PLANT_BASED_ESSENTIALS, NUTRITION_SOURCES, NUTRITION_DISCLAIMER } from './data/nutrition.js';
+import { RECIPES, MEAL_TYPES, AVOIDABLE_ALLERGENS, RECIPE_DISCLAIMER, MORE_RECIPE_SOURCES } from './data/recipes.js';
 import { monthsToLabel, stageForMonths, shareText, getVideoDuration, todayInputDate, formatDateInput } from './utils.js';
 import { parseKey, toKey, addDays, addMonths, prevSeasonAnchor, nextSeasonAnchor } from './planner.js';
 
@@ -107,6 +108,11 @@ export const ui = {
 
   // Nutrition
   nutritionStage: '', // which developmental stage's guide is being viewed
+  nutritionTab: 'guide', // 'guide' | 'recipes'
+  selectedRecipeId: null,
+  recipeMealFilter: 'all', // 'all' | 'Breakfast' | 'Lunch' | 'Dinner' | 'Snack'
+  recipeAgeOnly: true, // scope to the active child's age
+  recipeAvoid: [], // allergens to hide
 };
 
 export const data = {
@@ -283,6 +289,15 @@ export const actions = {
   goGuide() { go('guide'); },
   goNutrition() { setUI({ screen: 'nutrition', nutritionStage: ui.nutritionStage || stageForMonths(activeChild().ageMonths) }); },
   setNutritionStage(key) { setUI({ nutritionStage: key }); },
+  setNutritionTab(tab) { setUI({ nutritionTab: tab }); },
+  openRecipe(id) { setUI({ selectedRecipeId: id, screen: 'recipe-detail' }); },
+  backFromRecipe() { setUI({ screen: 'nutrition', nutritionTab: 'recipes' }); },
+  setRecipeMealFilter(key) { setUI({ recipeMealFilter: key }); },
+  toggleRecipeAgeOnly() { setUI({ recipeAgeOnly: !ui.recipeAgeOnly }); },
+  toggleRecipeAvoid(allergen) {
+    const has = ui.recipeAvoid.includes(allergen);
+    setUI({ recipeAvoid: has ? ui.recipeAvoid.filter((a) => a !== allergen) : [...ui.recipeAvoid, allergen] });
+  },
   goProfile() { go('profile'); },
   goScrapbook() { setUI({ screen: 'scrapbook', scrapbookTab: 'memories' }); },
   goScrapbookMemories() { setUI({ screen: 'scrapbook', scrapbookTab: 'memories' }); },
@@ -701,6 +716,15 @@ export function getViewState() {
     ...c, initial: c.name[0], ageLabel: monthsToLabel(c.ageMonths), isActive: c.id === data.activeChildId,
   }));
 
+  // ---------- Recipes ----------
+  const recipeMealFilters = ['all', ...MEAL_TYPES].map((key) => ({ key, label: key === 'all' ? 'All' : key, active: s.recipeMealFilter === key }));
+  const recipeAvoidOptions = AVOIDABLE_ALLERGENS.map((a) => ({ key: a, active: s.recipeAvoid.includes(a) }));
+  let visibleRecipes = RECIPES.slice();
+  if (s.recipeMealFilter !== 'all') visibleRecipes = visibleRecipes.filter((r) => r.mealType === s.recipeMealFilter);
+  if (s.recipeAgeOnly) visibleRecipes = visibleRecipes.filter((r) => child.ageMonths >= r.ageMin && child.ageMonths <= r.ageMax);
+  if (s.recipeAvoid.length) visibleRecipes = visibleRecipes.filter((r) => !r.allergens.some((a) => s.recipeAvoid.includes(a)));
+  const selectedRecipe = RECIPES.find((r) => r.id === s.selectedRecipeId) || RECIPES[0];
+
   return {
     screen: s.screen,
     caregiverName: data.caregiverName,
@@ -751,6 +775,16 @@ export function getViewState() {
     nutritionEssentials: PLANT_BASED_ESSENTIALS,
     nutritionSources: NUTRITION_SOURCES,
     nutritionDisclaimer: NUTRITION_DISCLAIMER,
+    nutritionTab: s.nutritionTab,
+
+    // Recipes
+    visibleRecipes,
+    recipeMealFilters,
+    recipeAgeOnly: s.recipeAgeOnly,
+    recipeAvoidOptions,
+    selectedRecipe,
+    recipeDisclaimer: RECIPE_DISCLAIMER,
+    moreRecipeSources: MORE_RECIPE_SOURCES,
 
     scrapbookTab: s.scrapbookTab,
     memories, selectedMemory,
