@@ -8,6 +8,7 @@ import { ACTIVITIES, categoryIconSvg, fmtAgeRange } from './data/activities.js';
 import { MILESTONES, DOMAIN_ORDER, DOMAIN_COLORS, statusStyle } from './data/milestones.js';
 import { GUIDE_RESOURCES, GUIDE_MEDIA } from './data/guideResources.js';
 import { monthsToLabel, stageForMonths, shareText, getVideoDuration, todayInputDate, formatDateInput } from './utils.js';
+import { parseKey, toKey, addDays, addMonths, prevSeasonAnchor, nextSeasonAnchor } from './planner.js';
 
 const FOCUS_LIST = ['Practical Life', 'Sensorial', 'Language', 'Mathematics', 'Cultural Studies', 'Movement', 'Nature & Outdoors', 'Rhythm & Ritual', 'Handwork', 'Creative Arts'];
 const ROLE_OPTIONS = ['Grandparent', 'Parent', 'Nanny/Sitter', 'Other'];
@@ -30,6 +31,15 @@ const STAGES = [
 const MEMORY_MEDIA_MAX = 8;      // photos + videos per memory entry
 const VIDEO_MAX_SECONDS = 60;    // clip length cap
 const VIDEO_MAX_BYTES = 100 * 1024 * 1024; // ~100MB per-clip safety net
+
+// Move the planner's reference date forward (dir=1) or back (dir=-1) by one
+// period, depending on which view is active.
+function shiftAnchor(date, view, dir) {
+  if (view === 'week') return addDays(date, 7 * dir);
+  if (view === 'month') return addMonths(date, dir);
+  if (view === 'season') return dir > 0 ? nextSeasonAnchor(date) : prevSeasonAnchor(date);
+  return new Date(date.getFullYear() + dir, 0, 1); // year
+}
 
 // A memory may be stored as the new media[] array, or (older entries) a single
 // photoURL. Normalize both to a media list of {type, url}.
@@ -84,6 +94,15 @@ export const ui = {
   mediaError: '',
   noteMood: null,
   noteMessage: '',
+
+  // Planner
+  planView: 'week', // 'week' | 'month' | 'season' | 'year'
+  planAnchor: '',   // 'YYYY-MM-DD' reference date for the current period
+  planSelectedDate: '', // day highlighted in the month view's detail panel
+  planPickDate: null,   // date the "choose an activity" overlay is adding to
+  planningActivityId: null, // activity being scheduled from Activity Detail
+  planActivityDate: '', // date chosen in the Activity Detail "add to plan" overlay
+  planToast: '',
 };
 
 export const data = {
@@ -98,6 +117,7 @@ export const data = {
   milestones: {},
   memories: [],
   notes: [],
+  plans: [], // [{ id, dateKey:'YYYY-MM-DD', activityId }]
   childDataLoading: false,
 };
 
@@ -160,13 +180,14 @@ async function loadActiveChildData() {
   const { uid, activeChildId } = data;
   if (!uid || !activeChildId) return;
   setData({ childDataLoading: true });
-  const [logs, milestones, memories, notes] = await Promise.all([
+  const [logs, milestones, memories, notes, plans] = await Promise.all([
     fb.fetchLogs(uid, activeChildId),
     fb.fetchMilestoneState(uid, activeChildId),
     fb.fetchMemories(uid, activeChildId),
     fb.fetchNotes(uid, activeChildId),
+    fb.fetchPlans(uid, activeChildId),
   ]);
-  setData({ logs, milestones, memories, notes, childDataLoading: false });
+  setData({ logs, milestones, memories, notes, plans, childDataLoading: false });
 }
 
 function activeChild() {
@@ -262,6 +283,37 @@ export const actions = {
   goScrapbookNotes() { setUI({ screen: 'scrapbook', scrapbookTab: 'notes' }); },
   goScrapbookMilestones() { setUI({ screen: 'scrapbook', scrapbookTab: 'milestones' }); },
   goNotes() { setUI({ screen: 'scrapbook', scrapbookTab: 'notes' }); },
+
+  // ---------- Planner ----------
+  goPlanner() { setUI({ screen: 'planner', planAnchor: ui.planAnchor || todayInputDate(), planSelectedDate: ui.planSelectedDate || todayInputDate() }); },
+  setPlanView(v) { setUI({ planView: v }); },
+  planToday() { setUI({ planAnchor: todayInputDate(), planSelectedDate: todayInputDate() }); },
+  planPrev() { setUI({ planAnchor: toKey(shiftAnchor(parseKey(ui.planAnchor || todayInputDate()), ui.planView, -1)) }); },
+  planNext() { setUI({ planAnchor: toKey(shiftAnchor(parseKey(ui.planAnchor || todayInputDate()), ui.planView, 1)) }); },
+  selectPlanDay(dateKey) { setUI({ planSelectedDate: dateKey }); },
+  openMonthFromYear(year, month) { setUI({ planView: 'month', planAnchor: toKey(new Date(year, month, 1)) }); },
+
+  openDayPlanner(dateKey) { setUI({ planPickDate: dateKey }); },
+  closeDayPlanner() { setUI({ planPickDate: null }); },
+  async addActivityToPlan(activityId, dateKey) {
+    const id = await fb.addPlan(data.uid, data.activeChildId, { dateKey, activityId });
+    setData({ plans: [...data.plans, { id, dateKey, activityId }] });
+    setUI({ planPickDate: null, planningActivityId: null, planToast: 'Added to the plan' });
+    setTimeout(() => setUI({ planToast: '' }), 2200);
+  },
+  removePlan(planId) {
+    setData({ plans: data.plans.filter((p) => p.id !== planId) });
+    fb.removePlanEntry(data.uid, data.activeChildId, planId).catch((e) => console.error(e));
+  },
+
+  // "Add to plan" from an Activity Detail screen
+  openPlanActivity(activityId) { setUI({ planningActivityId: activityId, planActivityDate: todayInputDate() }); },
+  closePlanActivity() { setUI({ planningActivityId: null }); },
+  onPlanActivityDateChange(e) { ui.planActivityDate = e.target.value; },
+  confirmPlanActivity() {
+    if (!ui.planningActivityId) return;
+    this.addActivityToPlan(ui.planningActivityId, ui.planActivityDate || todayInputDate());
+  },
 
   openActivity(id) { setUI({ selectedActivityId: id, screen: 'activity-detail' }); },
   goLogActivity() {
@@ -443,13 +495,33 @@ export const actions = {
 
   setNoteMood(key) { setUI({ noteMood: key }); },
   onNoteMessageChange(e) { ui.noteMessage = e.target.value; },
-  async sendNote() {
+  sendNote() {
     if (!ui.noteMood && !(ui.noteMessage || '').trim()) return;
     const moodKey = ui.noteMood || 'smooth';
-    const message = (ui.noteMessage || '').trim() || moodLabel(moodKey) + ' — nothing else to add.';
-    const note = { mood: moodKey, message, date: 'Today, ' + todayTimeLabel() };
-    const id = await fb.addNote(data.uid, data.activeChildId, note);
-    setData({ notes: [{ id, ...note }, ...data.notes] });
+    const freeform = (ui.noteMessage || '').trim();
+    const child = activeChild();
+
+    // Compose a warm, readable handoff message for the family.
+    const todayActs = data.logs.filter((l) => l.dateKey === todayKey() && l.type === 'activity').length;
+    const summary = todayActs > 0
+      ? `${todayActs} ${todayActs === 1 ? 'activity' : 'activities'} logged today.`
+      : 'A calm day together.';
+    const lines = [
+      `How it went: ${moodLabel(moodKey)}\n${summary}`,
+      freeform,
+      `Shared with love by ${data.caregiverName || 'your caregiver'} · via Little Steps`,
+    ].filter(Boolean);
+
+    // 1) Open the phone's native share sheet FIRST — navigator.share must be
+    //    invoked synchronously inside the tap gesture (iOS rejects it after an
+    //    await). shareText falls back to copy-to-clipboard on desktop.
+    shareText(`${child.name}'s day 🌱`, lines, (t) => setUI({ shareToast: t }));
+
+    // 2) Then record it in the Sent history (fire-and-forget, non-blocking).
+    const note = { mood: moodKey, message: freeform || moodLabel(moodKey) + ' — nothing else to add.', date: 'Today, ' + todayTimeLabel() };
+    fb.addNote(data.uid, data.activeChildId, note)
+      .then((id) => setData({ notes: [{ id, ...note }, ...data.notes] }))
+      .catch((e) => console.error(e));
     setUI({ noteMood: null, noteMessage: '' });
   },
 
@@ -598,6 +670,19 @@ export function getViewState() {
   });
   const selectedMemory = memories.find((m) => m.id === s.selectedMemoryId) || memories[0];
 
+  // ---------- Planner-resolved data ----------
+  const activityById = {};
+  activities.forEach((a) => { activityById[a.id] = a; });
+  const plansResolved = data.plans
+    .map((p) => ({ ...p, activity: activityById[p.activityId] || null }))
+    .filter((p) => p.activity);
+  const planTodayKey = todayInputDate();
+  const upcomingPlans = plansResolved
+    .filter((p) => p.dateKey >= planTodayKey)
+    .sort((a, b) => (a.dateKey === b.dateKey ? 0 : a.dateKey < b.dateKey ? -1 : 1))
+    .slice(0, 5);
+  const planningActivity = s.planningActivityId ? activityById[s.planningActivityId] : null;
+
   const todayLogs = data.logs.filter((l) => l.dateKey === todayKey());
   const activityCount = todayLogs.filter((l) => l.type === 'activity').length;
   const todaySummaryLine = activityCount > 0
@@ -624,6 +709,20 @@ export function getViewState() {
 
     activities, visibleActivities, traditionFilters, focusAreaFilters, selectedActivity, suggestedActivity,
     ageFilterOptions, ageFilterCaption,
+
+    // Planner
+    plans: plansResolved,
+    planView: s.planView,
+    planAnchor: s.planAnchor || planTodayKey,
+    planSelectedDate: s.planSelectedDate || planTodayKey,
+    planTodayKey,
+    planPickDate: s.planPickDate,
+    planningActivityId: s.planningActivityId,
+    planningActivity,
+    planActivityDate: s.planActivityDate,
+    planToast: s.planToast,
+    upcomingPlans,
+    activitiesForPlanner: activities,
 
     domains, domainsForScrapbook, selectedMilestone,
     milestoneBackLabel: s.milestoneBackTarget === 'scrapbook-milestones' ? 'Scrapbook' : 'Progress',
@@ -664,7 +763,7 @@ export function getViewState() {
     shareToast: s.shareToast,
     showChildSwitcher: s.showChildSwitcher, switcherChildren,
 
-    showTabBar: ['home', 'activities', 'scrapbook', 'progress', 'profile'].includes(s.screen),
+    showTabBar: ['home', 'activities', 'planner', 'scrapbook', 'progress', 'profile'].includes(s.screen),
     childDataLoading: data.childDataLoading,
     authError: s.authError,
   };

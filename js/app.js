@@ -18,6 +18,7 @@ import { renderScrapbook } from './screens/scrapbook.js';
 import { renderMemoryNew } from './screens/memoryNew.js';
 import { renderMemoryDetail } from './screens/memoryDetail.js';
 import { renderPrintPreview } from './screens/printPreview.js';
+import { renderPlanner, renderDayPickOverlay, renderPlanActivityOverlay } from './screens/planner.js';
 import { el } from './utils.js';
 
 const root = document.getElementById('app-root');
@@ -39,6 +40,7 @@ const SCREEN_RENDERERS = {
   'memory-new': renderMemoryNew,
   'memory-detail': renderMemoryDetail,
   'print-preview': renderPrintPreview,
+  'planner': renderPlanner,
 };
 
 function renderLoading() {
@@ -66,6 +68,12 @@ function render() {
 
   if (vals.showChildSwitcher) {
     root.appendChild(renderChildSwitcher(vals, state.actions));
+  }
+  if (vals.planPickDate) {
+    root.appendChild(renderDayPickOverlay(vals, state.actions));
+  }
+  if (vals.planningActivityId) {
+    root.appendChild(renderPlanActivityOverlay(vals, state.actions));
   }
 
   if (vals.showTabBar) {

@@ -9,7 +9,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
 import {
   initializeFirestore, persistentLocalCache, persistentSingleTabManager,
-  doc, getDoc, setDoc, updateDoc, collection, getDocs, addDoc, query, orderBy, limit,
+  doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, addDoc, query, orderBy, limit,
   writeBatch, serverTimestamp,
 } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
 import {
@@ -119,6 +119,23 @@ export async function addMemory(uid, childId, memory) {
 
 export async function updateMemory(uid, childId, memoryId, patch) {
   await updateDoc(doc(db, 'users', uid, 'children', childId, 'memories', memoryId), patch);
+}
+
+// ---------- Planner (scheduled activities) ----------
+export async function fetchPlans(uid, childId) {
+  const snap = await getDocs(collection(db, 'users', uid, 'children', childId, 'plans'));
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+export async function addPlan(uid, childId, plan) {
+  const ref = await addDoc(collection(db, 'users', uid, 'children', childId, 'plans'), {
+    ...plan, createdAt: serverTimestamp(),
+  });
+  return ref.id;
+}
+
+export async function removePlanEntry(uid, childId, planId) {
+  await deleteDoc(doc(db, 'users', uid, 'children', childId, 'plans', planId));
 }
 
 // ---------- Handoff notes ----------
