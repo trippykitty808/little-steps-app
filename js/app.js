@@ -19,8 +19,9 @@ import { renderMemoryNew } from './screens/memoryNew.js';
 import { renderMemoryDetail } from './screens/memoryDetail.js';
 import { renderPrintPreview } from './screens/printPreview.js';
 import { renderPlanner, renderDayPickOverlay, renderPlanActivityOverlay } from './screens/planner.js';
-import { renderNutrition } from './screens/nutrition.js';
+import { renderNutrition, renderMealPickOverlay } from './screens/nutrition.js';
 import { renderRecipeDetail } from './screens/recipeDetail.js';
+import { renderShoppingList } from './screens/shoppingList.js';
 import { el } from './utils.js';
 
 const root = document.getElementById('app-root');
@@ -45,6 +46,7 @@ const SCREEN_RENDERERS = {
   'planner': renderPlanner,
   'nutrition': renderNutrition,
   'recipe-detail': renderRecipeDetail,
+  'shopping-list': renderShoppingList,
 };
 
 function renderLoading() {
@@ -78,6 +80,9 @@ function render() {
   }
   if (vals.planningActivityId) {
     root.appendChild(renderPlanActivityOverlay(vals, state.actions));
+  }
+  if (vals.mealPick) {
+    root.appendChild(renderMealPickOverlay(vals, state.actions));
   }
 
   if (vals.showTabBar) {

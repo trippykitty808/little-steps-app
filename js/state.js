@@ -10,7 +10,7 @@ import { GUIDE_RESOURCES, GUIDE_MEDIA } from './data/guideResources.js';
 import { STAGE_NUTRITION, NUTRITION_STAGE_ORDER, PLANT_BASED_ESSENTIALS, NUTRITION_SOURCES, NUTRITION_DISCLAIMER } from './data/nutrition.js';
 import { RECIPES, MEAL_TYPES, AVOIDABLE_ALLERGENS, RECIPE_DISCLAIMER, MORE_RECIPE_SOURCES } from './data/recipes.js';
 import { monthsToLabel, stageForMonths, shareText, getVideoDuration, todayInputDate, formatDateInput } from './utils.js';
-import { parseKey, toKey, addDays, addMonths, prevSeasonAnchor, nextSeasonAnchor } from './planner.js';
+import { parseKey, toKey, addDays, addMonths, prevSeasonAnchor, nextSeasonAnchor, weekDays, monthShort, dayFull } from './planner.js';
 
 const FOCUS_LIST = ['Practical Life', 'Sensorial', 'Language', 'Mathematics', 'Cultural Studies', 'Movement', 'Nature & Outdoors', 'Rhythm & Ritual', 'Handwork', 'Creative Arts'];
 const ROLE_OPTIONS = ['Grandparent', 'Parent', 'Nanny/Sitter', 'Other'];
@@ -113,6 +113,11 @@ export const ui = {
   recipeMealFilter: 'all', // 'all' | 'Breakfast' | 'Lunch' | 'Dinner' | 'Snack'
   recipeAgeOnly: true, // scope to the active child's age
   recipeAvoid: [], // allergens to hide
+
+  // Meal planner
+  mealAnchor: '', // 'YYYY-MM-DD' reference date for the current week
+  mealPick: null, // { dateKey, mealType } the recipe-picker overlay is adding to
+  shopChecked: {}, // transient: ingredient text -> checked-off in the shopping list
 };
 
 export const data = {
@@ -128,6 +133,7 @@ export const data = {
   memories: [],
   notes: [],
   plans: [], // [{ id, dateKey:'YYYY-MM-DD', activityId }]
+  meals: [], // [{ id, dateKey:'YYYY-MM-DD', recipeId, mealType }]
   childDataLoading: false,
 };
 
@@ -190,14 +196,15 @@ async function loadActiveChildData() {
   const { uid, activeChildId } = data;
   if (!uid || !activeChildId) return;
   setData({ childDataLoading: true });
-  const [logs, milestones, memories, notes, plans] = await Promise.all([
+  const [logs, milestones, memories, notes, plans, meals] = await Promise.all([
     fb.fetchLogs(uid, activeChildId),
     fb.fetchMilestoneState(uid, activeChildId),
     fb.fetchMemories(uid, activeChildId),
     fb.fetchNotes(uid, activeChildId),
     fb.fetchPlans(uid, activeChildId),
+    fb.fetchMeals(uid, activeChildId),
   ]);
-  setData({ logs, milestones, memories, notes, plans, childDataLoading: false });
+  setData({ logs, milestones, memories, notes, plans, meals, childDataLoading: false });
 }
 
 function activeChild() {
@@ -297,6 +304,30 @@ export const actions = {
   toggleRecipeAvoid(allergen) {
     const has = ui.recipeAvoid.includes(allergen);
     setUI({ recipeAvoid: has ? ui.recipeAvoid.filter((a) => a !== allergen) : [...ui.recipeAvoid, allergen] });
+  },
+
+  // Meal planner
+  mealPrevWeek() { setUI({ mealAnchor: toKey(addDays(parseKey(ui.mealAnchor || todayInputDate()), -7)) }); },
+  mealNextWeek() { setUI({ mealAnchor: toKey(addDays(parseKey(ui.mealAnchor || todayInputDate()), 7)) }); },
+  mealToday() { setUI({ mealAnchor: todayInputDate() }); },
+  openMealPick(dateKey, mealType) { setUI({ mealPick: { dateKey, mealType } }); },
+  closeMealPick() { setUI({ mealPick: null }); },
+  async addMealToPlan(recipeId) {
+    if (!ui.mealPick) return;
+    const { dateKey, mealType } = ui.mealPick;
+    const id = await fb.addMeal(data.uid, data.activeChildId, { dateKey, mealType, recipeId });
+    setData({ meals: [...data.meals, { id, dateKey, mealType, recipeId }] });
+    setUI({ mealPick: null });
+  },
+  removeMeal(mealId) {
+    setData({ meals: data.meals.filter((m) => m.id !== mealId) });
+    fb.removeMealEntry(data.uid, data.activeChildId, mealId).catch((e) => console.error(e));
+  },
+  goShoppingList() { setUI({ screen: 'shopping-list', shopChecked: {} }); },
+  backFromShopping() { setUI({ screen: 'nutrition', nutritionTab: 'meals' }); },
+  toggleShopItem(text) { setUI({ shopChecked: { ...ui.shopChecked, [text]: !ui.shopChecked[text] } }); },
+  shareShoppingList(items, weekLabel) {
+    shareText(`Shopping list — ${weekLabel}`, items.map((it) => `• ${it.text}${it.count > 1 ? ` (×${it.count})` : ''}`), (t) => setUI({ shareToast: t }));
   },
   goProfile() { go('profile'); },
   goScrapbook() { setUI({ screen: 'scrapbook', scrapbookTab: 'memories' }); },
@@ -606,7 +637,7 @@ export function getViewState() {
   const selectedActivity = activities.find((a) => a.id === s.selectedActivityId) || activities[0];
   const suggestedActivity = activities.find((a) => a.isGoodFit) || activities.find((a) => a.isAgeOk) || activities[0];
 
-  const traditionFilters = ['all', 'Montessori', 'Waldorf'].map((key) => ({
+  const traditionFilters = ['all', 'Montessori', 'Waldorf', 'Forest School'].map((key) => ({
     key, label: key === 'all' ? 'All' : key, active: s.traditionFilter === key,
   }));
   const focusAreaFilters = ['all', ...FOCUS_LIST].map((key) => ({
@@ -725,6 +756,46 @@ export function getViewState() {
   if (s.recipeAvoid.length) visibleRecipes = visibleRecipes.filter((r) => !r.allergens.some((a) => s.recipeAvoid.includes(a)));
   const selectedRecipe = RECIPES.find((r) => r.id === s.selectedRecipeId) || RECIPES[0];
 
+  // ---------- Meal planner ----------
+  const recipeById = {};
+  RECIPES.forEach((r) => { recipeById[r.id] = r; });
+  const mealTodayKey = todayInputDate();
+  const mealAnchorKey = s.mealAnchor || mealTodayKey;
+  const mealsByCell = {}; // `${dateKey}|${mealType}` -> [{...meal, recipe}]
+  data.meals.forEach((m) => {
+    const recipe = recipeById[m.recipeId];
+    if (!recipe) return;
+    const k = m.dateKey + '|' + m.mealType;
+    (mealsByCell[k] = mealsByCell[k] || []).push({ ...m, recipe });
+  });
+  const mealWeek = weekDays(parseKey(mealAnchorKey)).map((d) => ({
+    key: toKey(d),
+    dayFull: dayFull(d.getDay()),
+    dateLabel: `${monthShort(d.getMonth())} ${d.getDate()}`,
+    isToday: toKey(d) === mealTodayKey,
+    slots: MEAL_TYPES.map((mt) => ({ mealType: mt, entries: mealsByCell[toKey(d) + '|' + mt] || [] })),
+  }));
+  const mealWeekLabel = (() => { const ws = weekDays(parseKey(mealAnchorKey))[0]; return `Week of ${monthShort(ws.getMonth())} ${ws.getDate()}`; })();
+  // Recipes offered in the picker: matching the picked meal type and the child's age
+  const mealPickRecipes = s.mealPick
+    ? RECIPES.filter((r) => r.mealType === s.mealPick.mealType && child.ageMonths >= r.ageMin && child.ageMonths <= r.ageMax)
+    : [];
+
+  // Shopping list: aggregate ingredients from this week's planned meals.
+  const weekRecipes = [];
+  mealWeek.forEach((day) => day.slots.forEach((slot) => slot.entries.forEach((e) => weekRecipes.push(e.recipe))));
+  const shopMap = {};
+  weekRecipes.forEach((r) => r.ingredients.forEach((ing) => {
+    if (!shopMap[ing]) shopMap[ing] = { text: ing, count: 0, recipes: [] };
+    shopMap[ing].count += 1;
+    if (!shopMap[ing].recipes.includes(r.name)) shopMap[ing].recipes.push(r.name);
+  }));
+  const shoppingItems = Object.values(shopMap)
+    .map((it) => ({ ...it, checked: !!s.shopChecked[it.text] }))
+    .sort((a, b) => a.text.localeCompare(b.text));
+  const shoppingMealCount = weekRecipes.length;
+  const shoppingRecipeCount = new Set(weekRecipes.map((r) => r.id)).size;
+
   return {
     screen: s.screen,
     caregiverName: data.caregiverName,
@@ -785,6 +856,17 @@ export function getViewState() {
     selectedRecipe,
     recipeDisclaimer: RECIPE_DISCLAIMER,
     moreRecipeSources: MORE_RECIPE_SOURCES,
+
+    // Meal planner
+    mealWeek,
+    mealWeekLabel,
+    mealPick: s.mealPick,
+    mealPickRecipes,
+
+    // Shopping list
+    shoppingItems,
+    shoppingMealCount,
+    shoppingRecipeCount,
 
     scrapbookTab: s.scrapbookTab,
     memories, selectedMemory,

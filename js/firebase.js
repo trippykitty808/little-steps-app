@@ -138,6 +138,23 @@ export async function removePlanEntry(uid, childId, planId) {
   await deleteDoc(doc(db, 'users', uid, 'children', childId, 'plans', planId));
 }
 
+// ---------- Meal plan (scheduled recipes) ----------
+export async function fetchMeals(uid, childId) {
+  const snap = await getDocs(collection(db, 'users', uid, 'children', childId, 'meals'));
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+export async function addMeal(uid, childId, meal) {
+  const ref = await addDoc(collection(db, 'users', uid, 'children', childId, 'meals'), {
+    ...meal, createdAt: serverTimestamp(),
+  });
+  return ref.id;
+}
+
+export async function removeMealEntry(uid, childId, mealId) {
+  await deleteDoc(doc(db, 'users', uid, 'children', childId, 'meals', mealId));
+}
+
 // ---------- Handoff notes ----------
 export async function fetchNotes(uid, childId) {
   const q = query(collection(db, 'users', uid, 'children', childId, 'notes'), orderBy('createdAt', 'desc'), limit(100));
