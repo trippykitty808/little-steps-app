@@ -735,6 +735,258 @@ export const ACTIVITIES = [
     resources: [
       { name: '30+ Nature Play Ideas for the Early Years', desc: 'Nature weaving and natural-materials handwork.', url: 'https://treehouseschoolhouse.com/blog/preschool-nature-play-ideas' },
     ] },
+
+  // ---------- RIE / Pikler (respectful care, free movement — babies & toddlers) ----------
+  { id: 'a57', name: 'Uninterrupted Floor Time', tradition: 'RIE/Pikler', category: 'Movement', duration: '10–30 min', ageMin: 0, ageMax: 12, color: '#D8C7E6',
+    materials: ['A firm, flat, safe surface (a rug or play mat on the floor — not a soft couch)', 'Nothing else, or one or two simple objects'],
+    steps: [
+      'Lay your baby on their back on a firm, flat surface — firm ground is what lets them push against something and move.',
+      'Skip props, seats, and positioners; free movement means their body finds its own way.',
+      'Sit nearby where they can see you, and simply watch — resist the urge to prop, entertain, or "help" them along.',
+      'Let them turn, reach, roll, and rest at their own pace, however long it takes.',
+      'If they fuss, respond warmly — but give a moment first to see if they resolve it themselves.',
+      'End when they signal they’re done, not on a timer.',
+    ],
+    resources: [
+      { name: 'Resources for Infant Educarers (RIE)', desc: 'The organization founded by Magda Gerber; the source of this approach.', url: 'https://rie.org/' },
+      { name: 'The Pikler / RIE Approach (research summary)', desc: 'A clear, evidence-based overview of free movement and respectful care.', url: 'https://theeducationhub.org.nz/the-pikler-resources-for-infant-educarers-approach/' },
+    ] },
+  { id: 'a58', name: 'Narrated Care Routines', tradition: 'RIE/Pikler', category: 'Language', duration: 'Everyday moments', ageMin: 0, ageMax: 24, color: '#B9C7DE',
+    materials: ['No materials — this is how you do diapering, dressing, and washing'],
+    steps: [
+      'Slow the routine right down; treat it as together-time, not a task to rush.',
+      'Tell your child what’s about to happen before you do it: "I’m going to pick you up now."',
+      'Ask and then genuinely pause: "Can I wipe your hands?" — wait for a look, a sound, a movement.',
+      'Narrate as you go, in a calm ordinary voice, so they can follow along.',
+      'Invite their participation — hold out the sleeve and wait for the arm rather than pushing it through.',
+      'The core idea: nothing is done to a baby, it’s done with them.',
+    ],
+    resources: [
+      { name: 'The Pikler / RIE Approach (research summary)', desc: 'On respectful, narrated caregiving and asking permission.', url: 'https://theeducationhub.org.nz/the-pikler-resources-for-infant-educarers-approach/' },
+      { name: 'Resources for Infant Educarers (RIE)', desc: 'Magda Gerber’s organization and its core principles.', url: 'https://rie.org/' },
+    ] },
+  { id: 'a59', name: 'Pikler Triangle Climbing', tradition: 'RIE/Pikler', category: 'Movement', duration: '15–30 min', ageMin: 10, ageMax: 36, color: '#D8C7E6',
+    materials: ['A Pikler climbing triangle (or a very low, stable set of steps)', 'A soft mat underneath'],
+    steps: [
+      'Set the triangle on a mat in an open space, and check it’s stable before every use.',
+      'Let your child approach it in their own time — don’t lift them onto it.',
+      'Stay close and watchful, but let them find their own grip and footing.',
+      'Resist "catching" them at every wobble; managing their own body is exactly the skill being built.',
+      'A child who climbs up on their own can almost always get down on their own — one who was placed up there often can’t.',
+    ],
+    resources: [
+      { name: 'Emmi Pikler’s Approach to Child Development', desc: 'Background on free movement and Pikler’s climbing equipment.', url: 'https://www.earlyyears.tv/emmi-piklers-approach-to-child-development-and-early-years/' },
+    ] },
+  { id: 'a60', name: 'Simple Object Play Basket', tradition: 'RIE/Pikler', category: 'Sensorial', duration: '10–20 min', ageMin: 6, ageMax: 18, color: '#B9C7DE',
+    materials: ['A low basket', '4–6 simple open-ended objects: a scarf, a wooden ring, a small bowl, a large curler, a cotton napkin', 'Nothing with batteries, lights, or sounds'],
+    steps: [
+      'Choose objects that "do nothing" — the baby should be the active one, not the toy.',
+      'Place a small number in a basket within easy reach.',
+      'Sit back and let your baby choose what to pick up, mouth, bang, or drop.',
+      'Don’t demonstrate the "right" way — there isn’t one.',
+      'Watch quietly; your calm attention is the point as much as the objects.',
+      'Swap an object or two occasionally rather than adding more.',
+    ],
+    resources: [
+      { name: 'Montessori and RIE — how they overlap', desc: 'On simple, passive objects and the active infant.', url: 'https://sprout-kids.com/blogs/sprouting-ideas/montessori-and-resources-for-infant-educarers' },
+    ] },
+  { id: 'a61', name: 'Child-Led Dressing Participation', tradition: 'RIE/Pikler', category: 'Practical Life', duration: '10 min', ageMin: 12, ageMax: 30, color: '#F4D9C6',
+    materials: ['Their own clothes', 'Somewhere comfortable to sit'],
+    steps: [
+      'Allow far more time than the job actually needs.',
+      'Lay out the clothes and name what comes next: "socks now."',
+      'Hold the sock open and wait — let them push their own foot in, however slowly.',
+      'Offer only the help they can’t manage, and say what you’re doing as you do it.',
+      'Let "not quite right" stand — a sock half-on is their work, and it counts.',
+      'Thank them for helping; it was a job you did together.',
+    ],
+    resources: [
+      { name: 'The Pikler / RIE Approach (research summary)', desc: 'On the child as an active participant in their own care.', url: 'https://theeducationhub.org.nz/the-pikler-resources-for-infant-educarers-approach/' },
+    ] },
+
+  // ---------- Waldorf: babies & toddlers, plus thinner categories ----------
+  { id: 'a62', name: 'Lullaby & Rocking Rhythm', tradition: 'Waldorf', category: 'Rhythm & Ritual', duration: '5–15 min', ageMin: 0, ageMax: 18, color: '#C9DDB6',
+    materials: ['Your voice', 'A rocking chair or simply your arms'],
+    steps: [
+      'Choose one or two lullabies and use the same ones every day — the repetition is what makes it a ritual.',
+      'Hold your baby close and rock slowly, letting your movement settle into a steady rhythm.',
+      'Sing softly and simply; a plain, unhurried voice is more soothing than a performance.',
+      'Use the same song to mark the same moment each day — before a nap, or at bedtime.',
+      'Let the last verse slow and quieten as you settle them down.',
+    ],
+    resources: [
+      { name: 'Waldorf Early Childhood Association (WECAN)', desc: 'Waldorf guidance specifically for birth-to-seven, including rhythm.', url: 'https://waldorfearlychildhood.org' },
+    ] },
+  { id: 'a63', name: 'Warm Care Ritual', tradition: 'Waldorf', category: 'Rhythm & Ritual', duration: '15–20 min', ageMin: 0, ageMax: 24, color: '#C9DDB6',
+    materials: ['Warm water', 'A soft towel', 'A little plain oil (optional)', 'A quiet, warm room'],
+    steps: [
+      'Warm the room and gather everything before you begin, so nothing interrupts.',
+      'Move slowly and predictably — the same order every time builds security.',
+      'Wash or bathe gently, naming each part as you go in a soft voice.',
+      'Wrap them warmly straight away; Waldorf care puts real weight on keeping little ones warm.',
+      'If you like, finish with a slow, gentle oiling and a quiet verse or hum.',
+      'Keep the whole thing unhurried — the calm is the ritual.',
+    ],
+    resources: [
+      { name: 'Waldorf Early Childhood Association (WECAN)', desc: 'On warmth, rhythm, and care in the first years.', url: 'https://waldorfearlychildhood.org' },
+    ] },
+  { id: 'a64', name: 'Finger Rhymes & Hand Verses', tradition: 'Waldorf', category: 'Language', duration: '5–10 min', ageMin: 6, ageMax: 24, color: '#B9C7DE',
+    materials: ['None — just your hands and voice'],
+    steps: [
+      'Pick one short rhyme with simple hand movements and keep it as "yours."',
+      'Sit facing your child, close enough that they can watch your hands.',
+      'Say it slowly with clear gestures — the same words, the same movements, every time.',
+      'Repeat it several times in a row; young children want the repetition, not variety.',
+      'Pause near the end and let them anticipate the last word or tickle.',
+      'Over weeks, they’ll start joining in with the gestures long before the words.',
+    ],
+    resources: [
+      { name: 'Waldorf Early Childhood Association (WECAN)', desc: 'Verses, songs, and language in the early years.', url: 'https://waldorfearlychildhood.org' },
+    ] },
+  { id: 'a65', name: 'Natural Texture Basket', tradition: 'Waldorf', category: 'Sensorial', duration: '10–20 min', ageMin: 6, ageMax: 18, color: '#B9C7DE',
+    materials: ['A basket', 'Natural-material items only: a silk scarf, a wool ball, a smooth wooden ring, a sheepskin scrap, a large pinecone'],
+    steps: [
+      'Gather items of natural materials — wood, wool, silk, cotton — for their warmth and variety of texture.',
+      'Check every item is large enough not to be a choking risk.',
+      'Set the basket beside your seated baby and let them choose.',
+      'Sit close and let them explore by touch and mouth without direction.',
+      'Name textures softly as they handle things: soft, smooth, scratchy, warm.',
+      'Rotate an item occasionally to keep it quietly interesting.',
+    ],
+    resources: [
+      { name: 'Waldorf Early Childhood Association (WECAN)', desc: 'Why natural materials are chosen for young children.', url: 'https://waldorfearlychildhood.org' },
+    ] },
+  { id: 'a66', name: 'Beeswax Crayon First Marks', tradition: 'Waldorf', category: 'Creative Arts', duration: '10–15 min', ageMin: 18, ageMax: 36, color: '#D8C7E6',
+    materials: ['Chunky beeswax block crayons (easier for a fist grip than sticks)', 'Thick paper', 'A protected table'],
+    steps: [
+      'Offer just one or two colors — a whole set is overwhelming at this age.',
+      'Tape the paper down so it doesn’t slide.',
+      'Sit alongside and make slow, broad strokes yourself, without drawing a "thing."',
+      'Let your child scribble however they like; big whole-arm marks are exactly right now.',
+      'Resist naming what it "is" — let it just be color and movement.',
+      'Keep it short and stop while they’re still enjoying it.',
+    ],
+    resources: [
+      { name: 'Why Block Crayons in Waldorf Education?', desc: 'The reasoning behind block crayons and early mark-making.', url: 'https://www.simplywaldorf.com/post/why-do-we-use-block-crayons-in-waldorf-education' },
+    ] },
+  { id: 'a67', name: 'Wool Ball Winding', tradition: 'Waldorf', category: 'Handwork', duration: '10–20 min', ageMin: 30, ageMax: 60, color: '#F4D9C6',
+    materials: ['A skein or length of soft wool yarn', 'Optional: a small ball of wool to build around'],
+    steps: [
+      'Sit together with the yarn loosely draped over your hands or a chair back.',
+      'Show winding the wool slowly around and around into a ball, turning as you go.',
+      'Hand the ball to your child and let them keep winding — loose and lumpy is fine.',
+      'Talk quietly or hum while you work; handwork suits a calm rhythm.',
+      'Admire the finished ball and put it aside for a future project.',
+    ],
+    resources: [
+      { name: 'Waldorf Early Childhood Association (WECAN)', desc: 'On handwork and purposeful work in early childhood.', url: 'https://waldorfearlychildhood.org' },
+    ] },
+  { id: 'a68', name: 'Finger Knitting', tradition: 'Waldorf', category: 'Handwork', duration: '20 min', ageMin: 48, ageMax: 60, color: '#F4D9C6',
+    materials: ['Chunky, soft yarn', 'Just your hands'],
+    steps: [
+      'Sit beside your child so they see your hands from the same angle, not mirrored.',
+      'Loop the yarn over their fingers and show weaving it over and under, one finger at a time.',
+      'Lift the lower loops over the top — slowly, narrating each move.',
+      'Let them try; expect to re-thread it several times, and keep it light.',
+      'Even a short cord is a triumph — tie it off and let them wear it as a bracelet.',
+    ],
+    resources: [
+      { name: 'Waldorf Early Childhood Association (WECAN)', desc: 'Handwork traditions in Waldorf early childhood.', url: 'https://waldorfearlychildhood.org' },
+    ] },
+
+  // ---------- Forest School: from birth ----------
+  { id: 'a69', name: 'Under the Trees', tradition: 'Forest School', category: 'Nature & Outdoors', duration: '10–20 min', ageMin: 0, ageMax: 12, color: '#C9DDB6',
+    materials: ['A blanket', 'A tree with moving leaves overhead', 'Weather-appropriate layers'],
+    steps: [
+      'Spread a blanket under a tree on a mild day.',
+      'Lay your baby on their back where dappled light and moving leaves fill their view.',
+      'Lie down beside them and simply be there — no narrating needed at first.',
+      'Let them watch the leaves shift, listen to birds, and feel the moving air.',
+      'Name what you both notice now and then, softly: "the leaves are moving."',
+      'This is Forest School at its simplest — nature immersion starts long before walking.',
+    ],
+    resources: [
+      { name: 'Forest School Association — What is Forest School?', desc: 'The ethos of regular time in nature, from the earliest years.', url: 'https://forestschoolassociation.org/what-is-forest-school/' },
+    ] },
+  { id: 'a70', name: 'Outdoor Nap in Fresh Air', tradition: 'Forest School', category: 'Rhythm & Ritual', duration: 'Nap length', ageMin: 0, ageMax: 18, color: '#C9DDB6',
+    materials: ['A pram or safe sheltered spot', 'Weather-appropriate layers and blankets', 'A shaded, sheltered position'],
+    steps: [
+      'Check with the parents first — this is a family decision, and it should follow their plan and safe-sleep guidance.',
+      'Choose a sheltered, shaded spot out of wind and direct sun.',
+      'Dress your baby in layers appropriate to the temperature; feel the back of their neck to check they’re warm, not hot.',
+      'Settle them for their nap as you normally would, and stay where you can see and hear them.',
+      'Check on them regularly throughout.',
+      'This Nordic habit of napping in fresh air is a cornerstone of Scandinavian outdoor life.',
+    ],
+    resources: [
+      { name: 'Forest School Association — What is Forest School?', desc: 'Background on the Scandinavian outdoor-life tradition.', url: 'https://forestschoolassociation.org/what-is-forest-school/' },
+    ] },
+  { id: 'a71', name: 'First Grass & Texture Touch', tradition: 'Forest School', category: 'Sensorial', duration: '10–15 min', ageMin: 6, ageMax: 18, color: '#B9C7DE',
+    materials: ['A safe patch of grass, moss, or fallen leaves (checked first)', 'A blanket for a base'],
+    steps: [
+      'Walk the patch first to check it’s clean and free of anything sharp.',
+      'Sit your baby on a blanket at the edge of the grass.',
+      'Let them reach out and touch the grass in their own time — many babies hesitate at first, and that’s fine.',
+      'Put your own hand down beside theirs rather than pressing theirs into it.',
+      'Offer other textures nearby: moss, a big smooth leaf, bark.',
+      'Stay close — everything goes in the mouth at this age.',
+    ],
+    resources: [
+      { name: '30+ Nature Play Ideas for the Early Years', desc: 'First sensory encounters with the natural world.', url: 'https://treehouseschoolhouse.com/blog/preschool-nature-play-ideas' },
+    ] },
+  { id: 'a72', name: 'First Puddles & Mud', tradition: 'Forest School', category: 'Nature & Outdoors', duration: '15–25 min', ageMin: 12, ageMax: 24, color: '#C9DDB6',
+    materials: ['Wellies and waterproofs', 'A shallow, safe puddle or a tray of mud', 'Dry clothes for after'],
+    steps: [
+      'Dress for mess — the freedom to get filthy is the whole point.',
+      'Find a shallow puddle and step in yourself first to show it’s allowed.',
+      'Let your toddler stamp, pat, and splash however they like.',
+      'Try mud with hands: squeeze it, pat it, watch it drip.',
+      'Describe the sensations — cold, squelchy, wet, gloopy.',
+      'Warm, dry clothes and a cuddle straight after.',
+    ],
+    resources: [
+      { name: '15 Forest School Activities for Toddlers', desc: 'Early mud and puddle play ideas.', url: 'https://earlyimpactlearning.com/forest-school-activities-for-toddlers/' },
+    ] },
+  { id: 'a73', name: 'Nature Paintbrushes', tradition: 'Forest School', category: 'Creative Arts', duration: '20–30 min', ageMin: 30, ageMax: 60, color: '#D8C7E6',
+    materials: ['Sticks', 'Foraged bits: pine needles, leaves, feathers, grass', 'String or elastic bands', 'Paint and thick paper (or just water on a fence)'],
+    steps: [
+      'Go on a hunt for sticks and interesting leafy, feathery, or bristly bits.',
+      'Bind a bundle to the end of each stick with string or a band to make a brush.',
+      'Make two or three brushes with different textures.',
+      'Try each one — notice how a feather brush marks differently to a pine bundle.',
+      'Paint on paper, or just "paint" with water on a fence or path on a dry day.',
+    ],
+    resources: [
+      { name: 'Forest School Activities & Ideas (Muddy Faces)', desc: 'Nature crafts and natural mark-making.', url: 'https://muddyfaces.co.uk/outdoor-hub/forest-school/forest-school-activities/' },
+    ] },
+
+  // ---------- Filling thinner categories ----------
+  { id: 'a74', name: 'Edible Finger Painting', tradition: 'Montessori', category: 'Creative Arts', duration: '15–20 min', ageMin: 12, ageMax: 30, color: '#D8C7E6',
+    materials: ['Plain yogurt or thick baby cereal', 'A little natural coloring: beet juice, spinach purée, turmeric', 'A high chair tray or taped-down paper', 'A wipe-down surface'],
+    steps: [
+      'Stir a spoonful of natural coloring into a few small blobs of yogurt or thick cereal.',
+      'Tape paper down, or just use the high chair tray directly.',
+      'Put a small blob in front of your child and let them discover it.',
+      'Let them smear, tap, and taste — everything here is safe to mouth, which is why it works at this age.',
+      'Add a second color and let them find what happens where the two meet.',
+      'Wipe down together at the end as part of the activity.',
+    ],
+    resources: [
+      { name: 'Montessori Art for Toddlers', desc: 'Safe, developmentally-appropriate first art experiences.', url: 'https://montessori-art.com/crafts-for-toddlers-clay-play-activities/' },
+    ] },
+  { id: 'a75', name: 'Object Naming Basket', tradition: 'Montessori', category: 'Language', duration: '10 min', ageMin: 12, ageMax: 30, color: '#B9C7DE',
+    materials: ['A small basket', '4–5 familiar real objects (a spoon, a brush, a ball, a sock, a cup)'],
+    steps: [
+      'Choose real everyday objects your child already sees you use — not toys or miniatures.',
+      'Take one out at a time and name it clearly and simply: "spoon."',
+      'Hand it over and let them explore it fully before moving on.',
+      'Once all are out, ask them to find one: "where is the ball?"',
+      'For a child who’s ready, hold one up and ask "what is this?"',
+      'Swap in new objects as the old ones become easy.',
+    ],
+    resources: [
+      { name: 'How to Use the Three-Period Lesson', desc: 'The naming → identify → recall structure behind this activity.', url: 'https://www.happy-monti.com/blog/language/how-to-use-three-part-cards-in-a-traditional-montessori-three-period-lesson/' },
+    ] },
 ];
 
 export function fmtAgeRange(min, max) {

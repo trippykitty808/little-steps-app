@@ -11,6 +11,8 @@ export const GUIDE_RESOURCES = [
   { name: 'Waldorf Early Childhood Association (WECAN)', desc: 'Waldorf guidance specifically for birth-to-seven.', url: 'https://waldorfearlychildhood.org' },
   { name: 'Forest School Association', desc: 'The UK body defining the Forest School ethos and principles.', url: 'https://forestschoolassociation.org' },
   { name: 'Muddy Faces — Outdoor Learning Hub', desc: 'A large library of Forest School and nature-play activities.', url: 'https://muddyfaces.co.uk/outdoor-hub/' },
+  { name: 'Resources for Infant Educarers (RIE)', desc: 'Magda Gerber\'s organization — respectful care for babies.', url: 'https://rie.org/' },
+  { name: 'The Education Hub — The Pikler/RIE Approach', desc: 'An evidence-based summary of free movement and respectful care.', url: 'https://theeducationhub.org.nz/the-pikler-resources-for-infant-educarers-approach/' },
 ];
 
 export const GUIDE_MEDIA = [
@@ -23,4 +25,5 @@ export const GUIDE_MEDIA = [
   { name: 'A Waldorf Journey', desc: 'Blog and podcast from a trained Waldorf teacher.', url: 'https://www.awaldorfjourney.com' },
   { name: 'Moon Child Blog — Sarah Baldwin', desc: 'Waldorf education, parenting, and craft tutorials.', url: 'https://www.bellalunatoys.com/blogs/moon-child-blog-sarah-baldwin' },
   { name: 'Early Impact Learning — Forest School', desc: 'Practical outdoor and Forest School activity ideas by age.', url: 'https://earlyimpactlearning.com/forest-school-activities-for-toddlers/' },
+  { name: 'Early Years TV — Emmi Pikler', desc: 'A deep look at Pikler\'s work on free movement in infancy.', url: 'https://www.earlyyears.tv/emmi-piklers-approach-to-child-development-and-early-years/' },
 ];
