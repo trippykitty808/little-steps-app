@@ -1,5 +1,11 @@
 import { el } from '../utils.js';
 
+const TRADITION_BADGE = {
+  'Forest School': { background: '#E9DFC9', color: '#7A6234' },
+  'RIE/Pikler': { background: '#DCE7F3', color: '#46617F' },
+  default: { background: 'var(--lavender-tint)', color: 'var(--waldorf-fg)' },
+};
+
 export function renderActivityDetail(vals, actions) {
   const a = vals.selectedActivity;
   return el('div', { 'data-screen-label': 'Activity Detail', class: 'screen' }, [
@@ -8,7 +14,7 @@ export function renderActivityDetail(vals, actions) {
       el('div', { style: { display: 'inline-block', font: "600 13.5px 'Nunito', sans-serif", color: 'var(--text-primary)', background: 'rgba(255,255,255,.6)', padding: '7px 14px', borderRadius: '100px', cursor: 'pointer', marginBottom: '8px' }, onClick: () => actions.goActivities() }, '← Activities'),
       el('div', { class: 'card', style: { borderRadius: '20px', padding: '22px', boxShadow: '0 12px 30px -20px rgba(60,50,30,.3)' } }, [
         el('div', { style: { font: "600 11px 'Nunito', sans-serif", letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--text-muted-3)' } }, `${a.category} · ${a.ageLabel}`),
-        el('div', { style: Object.assign({ display: 'inline-block', marginTop: '6px', font: "700 10px 'Nunito', sans-serif", letterSpacing: '.06em', textTransform: 'uppercase', padding: '3px 10px', borderRadius: '100px' }, a.tradition === 'Forest School' ? { background: '#E9DFC9', color: '#7A6234' } : { background: 'var(--lavender-tint)', color: 'var(--waldorf-fg)' }) }, a.tradition),
+        el('div', { style: Object.assign({ display: 'inline-block', marginTop: '6px', font: "700 10px 'Nunito', sans-serif", letterSpacing: '.06em', textTransform: 'uppercase', padding: '3px 10px', borderRadius: '100px' }, TRADITION_BADGE[a.tradition] || TRADITION_BADGE.default) }, a.tradition),
         a.isGoodFit ? el('div', { style: { display: 'inline-block', marginTop: '6px', marginLeft: '6px', font: "700 10px 'Nunito', sans-serif", letterSpacing: '.06em', textTransform: 'uppercase', background: 'var(--sage-tint-bg)', color: 'var(--sage-tint-fg)', padding: '3px 10px', borderRadius: '100px' } }, 'Great fit') : null,
         el('div', { style: { font: "700 24px 'Quicksand', sans-serif", color: 'var(--text-primary)', marginTop: '6px' } }, a.name),
         el('div', { style: { font: "600 13px 'Nunito', sans-serif", color: 'var(--sage)', marginTop: '6px' } }, a.duration),

@@ -3,23 +3,26 @@ import { el } from '../utils.js';
 export function renderActivities(vals, actions) {
   return el('div', { 'data-screen-label': 'Activities', class: 'screen', style: { padding: '26px 24px 10px' } }, [
     el('div', { style: { font: "700 26px 'Quicksand', sans-serif", color: 'var(--text-primary)' } }, 'Activities'),
-    el('div', { style: { font: "400 14px 'Nunito', sans-serif", color: 'var(--text-muted-1)', marginTop: '4px' } }, `Montessori & Waldorf activities for ${vals.childName}, ${vals.childAgeLabel}`),
+    el('div', { style: { font: "400 14px 'Nunito', sans-serif", color: 'var(--text-muted-1)', marginTop: '4px' } }, `Four gentle approaches, chosen for ${vals.childName}, ${vals.childAgeLabel}`),
 
-    el('div', { style: { display: 'flex', gap: '8px', marginTop: '16px', flexWrap: 'wrap' } }, [
-      ...vals.traditionFilters.map((t) => el('div', {
+    el('div', { class: 'section-label', style: { marginTop: '18px' } }, 'Age'),
+    el('div', { style: { display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' } },
+      vals.ageFilterOptions.map((o) => el('div', {
+        class: `pill${o.active ? ' selected' : ''}`,
+        style: { padding: '8px 16px', font: "600 13px 'Quicksand', sans-serif" },
+        onClick: () => actions.setAgeStageFilter(o.key),
+      }, o.label))),
+    el('div', { style: { font: "400 11.5px 'Nunito', sans-serif", color: 'var(--text-muted-5)', marginTop: '6px' } }, vals.ageFilterCaption),
+
+    el('div', { class: 'section-label', style: { marginTop: '18px' } }, 'Tradition'),
+    el('div', { style: { display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' } },
+      vals.traditionFilters.map((t) => el('div', {
         class: `pill${t.active ? ' selected' : ''}`,
         style: { padding: '8px 16px', font: "600 13px 'Quicksand', sans-serif" },
         onClick: () => actions.setTraditionFilter(t.key),
-      }, t.label)),
-      el('div', {
-        class: `pill${vals.ageFitOnly ? ' selected' : ''}`,
-        style: { padding: '8px 16px', font: "600 13px 'Quicksand', sans-serif" },
-        onClick: () => actions.toggleAgeFit(),
-      }, `Best fit for ${vals.childName}`),
-    ]),
-    el('div', { style: { font: "400 11.5px 'Nunito', sans-serif", color: 'var(--text-muted-5)', marginTop: '6px' } }, `Best fit = matches ${vals.childName}'s age range and one of their chosen focus areas.`),
+      }, t.label))),
 
-    el('div', { class: 'section-label', style: { marginTop: '18px' } }, 'Filter by focus area'),
+    el('div', { class: 'section-label', style: { marginTop: '18px' } }, 'Focus area'),
     el('div', { style: { display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' } },
       vals.focusAreaFilters.map((f) => el('div', {
         class: `pill${f.active ? ' selected' : ''}`,

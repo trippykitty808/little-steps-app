@@ -4,7 +4,7 @@ export function renderGuide(vals, actions) {
   return el('div', { 'data-screen-label': 'Guide', class: 'screen', style: { padding: '26px 24px 10px' } }, [
     el('button', { class: 'back-link', onClick: () => actions.goProfile() }, '← Profile'),
     el('div', { style: { font: "700 26px 'Quicksand', sans-serif", color: 'var(--text-primary)', marginTop: '14px' } }, 'Approaches Guide'),
-    el('div', { style: { font: "400 14px/1.5 'Nunito', sans-serif", color: 'var(--text-muted-1)', marginTop: '6px' } }, 'Three gentle philosophies, and how we use them here — for caregivers new to any of them.'),
+    el('div', { style: { font: "400 14px/1.5 'Nunito', sans-serif", color: 'var(--text-muted-1)', marginTop: '6px' } }, 'Four gentle philosophies, and how we use them here — for caregivers new to any of them.'),
 
     el('div', { style: { marginTop: '20px', background: 'var(--montessori)', borderRadius: '18px', padding: '18px' } }, [
       el('div', { style: { font: "700 16px 'Quicksand', sans-serif", color: 'var(--text-primary)' } }, 'Montessori'),
@@ -19,6 +19,11 @@ export function renderGuide(vals, actions) {
     el('div', { style: { marginTop: '14px', background: '#DDE7CE', borderRadius: '18px', padding: '18px' } }, [
       el('div', { style: { font: "700 16px 'Quicksand', sans-serif", color: 'var(--text-primary)' } }, 'Forest School'),
       el('div', { style: { font: "400 13.5px/1.6 'Nunito', sans-serif", color: 'var(--text-body)', marginTop: '8px' } }, 'Rooted in Scandinavian outdoor traditions, Forest School gives children regular, all-weather time in a natural space to explore in their own way. Learning follows the child and the seasons — building dens, mixing mud, hunting for minibeasts — and gently includes manageable risk, like balancing on a log, to build confidence, resilience, and a lifelong bond with nature.'),
+    ]),
+
+    el('div', { style: { marginTop: '14px', background: '#D2DFEE', borderRadius: '18px', padding: '18px' } }, [
+      el('div', { style: { font: "700 16px 'Quicksand', sans-serif", color: 'var(--text-primary)' } }, 'RIE / Pikler'),
+      el('div', { style: { font: "400 13.5px/1.6 'Nunito', sans-serif", color: 'var(--text-body)', marginTop: '8px' } }, 'From pediatrician Emmi Pikler and educator Magda Gerber, this approach is about babies and toddlers above all. Two ideas carry it: free movement — a baby left on a firm floor, unpropped and uninterrupted, arrives at rolling, sitting, and walking in their own time — and respectful care, where diapering, dressing, and feeding are slowed down into unhurried together-time. Nothing is done to a baby; it\'s done with them, narrated and with permission asked. It fills the youngest end of this app, where the other approaches have less to say.'),
     ]),
 
     el('div', { class: 'section-label', style: { marginTop: '22px' } }, 'How we label milestones'),
