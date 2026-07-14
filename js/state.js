@@ -637,7 +637,7 @@ export function getViewState() {
   const selectedActivity = activities.find((a) => a.id === s.selectedActivityId) || activities[0];
   const suggestedActivity = activities.find((a) => a.isGoodFit) || activities.find((a) => a.isAgeOk) || activities[0];
 
-  const traditionFilters = ['all', 'Montessori', 'Waldorf', 'Forest School'].map((key) => ({
+  const traditionFilters = ['all', 'Montessori', 'Waldorf', 'Forest School', 'RIE/Pikler'].map((key) => ({
     key, label: key === 'all' ? 'All' : key, active: s.traditionFilter === key,
   }));
   const focusAreaFilters = ['all', ...FOCUS_LIST].map((key) => ({
